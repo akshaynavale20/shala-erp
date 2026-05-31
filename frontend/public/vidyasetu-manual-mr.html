@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>शाळा ERP — वापरकर्ता मार्गदर्शिका (मराठी)</title>
+<style>
+/* ── Fonts ──────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap');
+
+/* ── Variables ──────────────────────────────────────────────── */
+:root {
+  --blue:       #1A3A5C;
+  --blue-mid:   #2E5B8A;
+  --blue-light: #EBF2FA;
+  --gold:       #C9860B;
+  --gold-light: #FFF8E7;
+  --green:      #1a6b3c;
+  --red:        #B71C1C;
+  --ink:        #1a1a2e;
+  --muted:      #6b7280;
+  --rule:       #d1d5db;
+  --bg:         #f8fafc;
+  --white:      #ffffff;
+  --accent-bar: #1A3A5C;
+}
+
+/* ── Reset & Base ────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: 'Noto Sans Devanagari', 'Mangal', Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.75;
+}
+
+/* ── Print ───────────────────────────────────────────────────── */
+@media print {
+  body { background: white; font-size: 12pt; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+  .avoid-break { page-break-inside: avoid; }
+  h2.section-title { page-break-before: always; }
+  .cover { page-break-after: always; }
+  .toc-page { page-break-after: always; }
+  @page { size: A4; margin: 18mm 15mm 20mm 15mm; }
+  @page :first { margin-top: 0; }
+  .page-num::after { content: "पान " counter(page); counter-increment: page; }
+}
+@media screen {
+  .page-num { display: none; }
+}
+
+/* ── Layout ──────────────────────────────────────────────────── */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Cover Page ──────────────────────────────────────────────── */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, var(--blue) 0%, var(--blue-mid) 60%, #1a3a5c 100%);
+  color: white;
+  text-align: center;
+  padding: 60px 40px;
+}
+.cover-logo {
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 56px;
+  margin-bottom: 28px;
+  border: 3px solid rgba(255,255,255,0.3);
+}
+.cover h1 {
+  font-size: 3rem; font-weight: 800; letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.cover h1 span { color: #FFD166; }
+.cover .subtitle {
+  font-size: 1.1rem; opacity: 0.85;
+  margin-bottom: 40px;
+}
+.cover-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 1rem; font-weight: 600;
+  margin-bottom: 16px;
+  letter-spacing: 0.3px;
+}
+.cover-meta {
+  margin-top: 60px;
+  font-size: 0.82rem;
+  opacity: 0.6;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  padding-top: 16px;
+  width: 100%;
+  text-align: center;
+}
+.cover-divider {
+  width: 80px; height: 3px;
+  background: #FFD166;
+  border-radius: 2px;
+  margin: 24px auto;
+}
+
+/* ── TOC ─────────────────────────────────────────────────────── */
+.toc-page {
+  padding: 60px 40px;
+  background: white;
+  min-height: 100vh;
+}
+.toc-page h2 {
+  font-size: 1.6rem; color: var(--blue);
+  border-bottom: 3px solid var(--gold);
+  padding-bottom: 10px; margin-bottom: 28px;
+}
+.toc-list { list-style: none; }
+.toc-list li {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px dotted var(--rule);
+  padding: 9px 0;
+  font-size: 1rem;
+}
+.toc-num {
+  width: 32px; height: 32px;
+  background: var(--blue);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+.toc-label { flex: 1; font-weight: 500; }
+.toc-icon { font-size: 1.2rem; margin-right: 8px; }
+.toc-dots { flex: 1; border-bottom: 1px dotted var(--rule); margin: 0 8px; height: 14px; }
+
+/* ── Section Header ──────────────────────────────────────────── */
+.section-wrapper {
+  background: white;
+  margin-bottom: 0;
+  padding: 0 0 48px 0;
+}
+h2.section-title {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 1.55rem; font-weight: 800;
+  color: white;
+  background: var(--blue);
+  padding: 18px 32px;
+  margin-bottom: 32px;
+  letter-spacing: 0.3px;
+  border-left: 6px solid var(--gold);
+}
+h2.section-title .sect-icon {
+  font-size: 1.4rem;
+  background: rgba(255,255,255,0.15);
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+h2.section-title .sect-num {
+  font-size: 0.75rem; font-weight: 600; opacity: 0.6;
+  display: block; letter-spacing: 1px;
+}
+.section-inner { padding: 0 32px; }
+
+/* ── Screenshot ──────────────────────────────────────────────── */
+.screenshot-box {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid var(--rule);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+  margin-bottom: 28px;
+  background: #f1f5f9;
+}
+.screenshot-box img {
+  width: 100%; display: block;
+  border-radius: 0;
+}
+.screenshot-caption {
+  background: var(--blue);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.75rem; font-weight: 600;
+  padding: 6px 14px;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+/* ── Steps ───────────────────────────────────────────────────── */
+.steps { list-style: none; counter-reset: step; margin-bottom: 24px; }
+.steps li {
+  counter-increment: step;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  background: var(--blue-light);
+  border-radius: 8px;
+  border-left: 4px solid var(--blue-mid);
+}
+.steps li::before {
+  content: counter(step);
+  min-width: 28px; height: 28px;
+  background: var(--blue);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.steps li strong { color: var(--blue); }
+
+/* ── Info Boxes ──────────────────────────────────────────────── */
+.info-box {
+  border-radius: 8px; padding: 14px 18px;
+  margin-bottom: 18px; font-size: 0.92rem;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.info-box .box-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.info-tip   { background: #ecfdf5; border-left: 4px solid #10b981; }
+.info-note  { background: var(--gold-light); border-left: 4px solid var(--gold); }
+.info-warn  { background: #fef2f2; border-left: 4px solid #ef4444; }
+
+/* ── Feature Grid ────────────────────────────────────────────── */
+.feat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.feat-card {
+  background: var(--blue-light);
+  border: 1px solid #c8ddf0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.feat-card .fc-icon {
+  font-size: 1.4rem; flex-shrink: 0;
+}
+.feat-card h4 { font-size: 0.9rem; color: var(--blue); margin-bottom: 3px; }
+.feat-card p  { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+/* ── Sub heading ─────────────────────────────────────────────── */
+h3.sub-head {
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--blue);
+  margin: 24px 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--gold);
+}
+
+/* ── Keyboard key ────────────────────────────────────────────── */
+kbd {
+  display: inline-block;
+  background: #f1f5f9;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.82rem;
+  font-family: monospace;
+  color: var(--ink);
+}
+
+/* ── Inline button label ─────────────────────────────────────── */
+.btn-label {
+  display: inline-block;
+  background: var(--blue);
+  color: white;
+  border-radius: 5px;
+  padding: 1px 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.btn-label.gold { background: var(--gold); }
+.btn-label.green { background: var(--green); }
+.btn-label.red   { background: var(--red); }
+
+/* ── Table ───────────────────────────────────────────────────── */
+.desc-table {
+  width: 100%; border-collapse: collapse;
+  margin-bottom: 20px; font-size: 0.9rem;
+}
+.desc-table th {
+  background: var(--blue); color: white;
+  padding: 8px 12px; text-align: left; font-weight: 600;
+}
+.desc-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--rule);
+}
+.desc-table tr:nth-child(even) td { background: var(--blue-light); }
+
+/* ── HR ──────────────────────────────────────────────────────── */
+.section-rule {
+  border: none;
+  border-top: 2px solid var(--blue);
+  opacity: 0.08;
+  margin: 0 0 0 0;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.manual-footer {
+  background: var(--blue);
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  padding: 28px;
+  font-size: 0.8rem;
+  margin-top: 48px;
+}
+.manual-footer strong { color: white; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     COVER PAGE
+════════════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">🏫</div>
+  <h1>शाळा <span>ERP</span></h1>
+  <p class="subtitle">शाळा व्यवस्थापन प्रणाली — VidyaSetu</p>
+  <div class="cover-divider"></div>
+  <div class="cover-badge">📖 वापरकर्ता मार्गदर्शिका</div>
+  <p style="opacity:0.7; font-size:0.9rem; margin-top:10px;">संपूर्ण मराठी माहितीपुस्तक</p>
+  <div class="cover-meta">
+    आवृत्ती १.०  ·  VidyaSetu ERP  ·  Developed by Akshay Navale<br/>
+    हे दस्तऐवज मुद्रणासाठी तयार आहे — Ctrl+P / ⌘P दाबा
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TABLE OF CONTENTS
+════════════════════════════════════════════════════════════════ -->
+<div class="toc-page">
+  <div class="container">
+    <h2>📋 अनुक्रमणिका</h2>
+    <ul class="toc-list">
+      <li><span class="toc-num">१</span><span class="toc-icon">🔐</span><span class="toc-label">लॉगिन — प्रणालीत प्रवेश</span></li>
+      <li><span class="toc-num">२</span><span class="toc-icon">🏠</span><span class="toc-label">डॅशबोर्ड — मुख्य पृष्ठ</span></li>
+      <li><span class="toc-num">३</span><span class="toc-icon">👨‍🎓</span><span class="toc-label">विद्यार्थी व्यवस्थापन</span></li>
+      <li><span class="toc-num">४</span><span class="toc-icon">👩‍🏫</span><span class="toc-label">कर्मचारी व्यवस्थापन</span></li>
+      <li><span class="toc-num">५</span><span class="toc-icon">📅</span><span class="toc-label">हजेरी — दैनिक उपस्थिती</span></li>
+      <li><span class="toc-num">६</span><span class="toc-icon">📝</span><span class="toc-label">परीक्षा व गुण नोंद</span></li>
+      <li><span class="toc-num">७</span><span class="toc-icon">💰</span><span class="toc-label">शुल्क व्यवस्थापन</span></li>
+      <li><span class="toc-num">८</span><span class="toc-icon">💵</span><span class="toc-label">वेतन व्यवस्थापन</span></li>
+      <li><span class="toc-num">९</span><span class="toc-icon">📄</span><span class="toc-label">प्रमाणपत्रे</span></li>
+      <li><span class="toc-num">१०</span><span class="toc-icon">📊</span><span class="toc-label">अहवाल केंद्र</span></li>
+      <li><span class="toc-num">११</span><span class="toc-icon">📒</span><span class="toc-label">जमा-खर्च व्यवस्थापन</span></li>
+      <li><span class="toc-num">१२</span><span class="toc-icon">🏫</span><span class="toc-label">इयत्ता व तुकड्या</span></li>
+      <li><span class="toc-num">१३</span><span class="toc-icon">⚙️</span><span class="toc-label">सेटअप — प्रशासन</span></li>
+    </ul>
+
+    <div class="info-box info-note" style="margin-top:32px;">
+      <span class="box-icon">💡</span>
+      <div>
+        <strong>हे मार्गदर्शिका कसे वापरावे:</strong> प्रत्येक प्रकरणात स्क्रीनशॉट आणि पायरीनिहाय सूचना आहेत.
+        मुद्रणासाठी <kbd>Ctrl+P</kbd> (Windows) किंवा <kbd>⌘+P</kbd> (Mac) दाबा आणि "Save as PDF" निवडा.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 1: LOGIN
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper">
+  <h2 class="section-title">
+    <span class="sect-icon">🔐</span>
+    <span><span class="sect-num">प्रकरण १</span>लॉगिन — प्रणालीत प्रवेश</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/01-login.png" alt="लॉगिन पृष्ठ" />
+      <div class="screenshot-caption">🔐 शाळा ERP — लॉगिन स्क्रीन</div>
+    </div>
+
+    <h3 class="sub-head">लॉगिन कसे करावे?</h3>
+    <ol class="steps">
+      <li>ब्राउझर उघडा आणि शाळेचा <strong>ERP वेब पत्ता</strong> टाका (उदा. <code>app.vidyasetu.in</code>)</li>
+      <li><strong>ईमेल</strong> चौकटीत तुमचा नोंदणीकृत ईमेल पत्ता टाका (उदा. <code>director@sanstha.edu</code>)</li>
+      <li><strong>पासवर्ड</strong> चौकटीत तुमचा संकेतशब्द टाका</li>
+      <li><span class="btn-label gold">लॉगिन करा</span> बटणावर क्लिक करा</li>
+      <li>यशस्वी लॉगिननंतर तुम्ही थेट <strong>डॅशबोर्ड</strong> वर जाल</li>
+    </ol>
+
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="fc-icon">👁️</span>
+        <div><h4>पासवर्ड दाखवा</h4><p>पासवर्ड चौकटीतील डोळ्याच्या चिन्हावर क्लिक करून पासवर्ड पाहू शकता</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">🔒</span>
+        <div><h4>सुरक्षित लॉगिन</h4><p>तुमचा पासवर्ड कोणाशी शेअर करू नका. तीन चुकीच्या प्रयत्नांनंतर खाते लॉक होऊ शकते</p></div>
+      </div>
+    </div>
+
+    <div class="info-box info-warn">
+      <span class="box-icon">⚠️</span>
+      <div><strong>महत्त्वाचे:</strong> पासवर्ड विसरल्यास संस्था प्रशासकाशी संपर्क साधा. ते तुमचा पासवर्ड रीसेट करू शकतात.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 2: DASHBOARD
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">🏠</span>
+    <span><span class="sect-num">प्रकरण २</span>डॅशबोर्ड — मुख्य पृष्ठ</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/02-dashboard.png" alt="डॅशबोर्ड" />
+      <div class="screenshot-caption">🏠 मुख्य डॅशबोर्ड — संपूर्ण माहिती एका दृष्टिक्षेपात</div>
+    </div>
+
+    <h3 class="sub-head">डॅशबोर्डवर काय दिसते?</h3>
+    <table class="desc-table avoid-break">
+      <thead><tr><th>विभाग</th><th>माहिती</th></tr></thead>
+      <tbody>
+        <tr><td>एकूण विद्यार्थी</td><td>शाळेतील नोंदणीकृत विद्यार्थ्यांची संख्या (मुले / मुली)</td></tr>
+        <tr><td>एकूण कर्मचारी</td><td>सक्रिय शिक्षक व शिक्षकेतर कर्मचारी</td></tr>
+        <tr><td>घटक / शाळा</td><td>संस्थेच्या अंतर्गत एकूण शाळांची संख्या</td></tr>
+        <tr><td>एकूण संकलन</td><td>चालू शैक्षणिक वर्षातील शुल्क संकलन</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-head">त्वरित कृती बटणे</h3>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="fc-icon">📅</span>
+        <div><h4>आजची हजेरी</h4><p>एका क्लिकने हजेरी पृष्ठावर जा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">💰</span>
+        <div><h4>शुल्क जमा</h4><p>विद्यार्थ्याची फी त्वरित घ्या</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">📄</span>
+        <div><h4>प्रमाणपत्र द्या</h4><p>बोनाफाईड / टीसी तयार करा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">➕</span>
+        <div><h4>नवीन विद्यार्थी</h4><p>नवा विद्यार्थी थेट नोंदवा</p></div>
+      </div>
+    </div>
+
+    <h3 class="sub-head">डाव्या बाजूची मेनू यादी</h3>
+    <p style="margin-bottom:14px; color:var(--muted);">डाव्या बाजूला सर्व विभागांचे मेनू दिसतात. त्यावर क्लिक केल्यावर त्या विभागात जाता येते.</p>
+    <div class="info-box info-tip">
+      <span class="box-icon">✅</span>
+      <div>वरच्या हेडरमध्ये <strong>शाळा निवड</strong> ड्रॉपडाउन आहे — एकापेक्षा जास्त शाळा असल्यास तिथून शाळा बदला. सर्व डेटा त्या शाळेनुसार बदलेल.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 3: STUDENTS
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">👨‍🎓</span>
+    <span><span class="sect-num">प्रकरण ३</span>विद्यार्थी व्यवस्थापन</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/03-students.png" alt="विद्यार्थी यादी" />
+      <div class="screenshot-caption">👨‍🎓 विद्यार्थी व्यवस्थापन — विद्यार्थी यादी</div>
+    </div>
+
+    <h3 class="sub-head">नवीन विद्यार्थी कसा जोडावा?</h3>
+    <ol class="steps">
+      <li>वरच्या उजव्या कोपऱ्यातील <span class="btn-label gold">+ नवीन विद्यार्थी</span> बटणावर क्लिक करा</li>
+      <li>उघडलेल्या फॉर्ममध्ये विद्यार्थ्याचे <strong>मराठी नाव</strong> आणि <strong>इंग्रजी नाव</strong> भरा</li>
+      <li><strong>GR क्रमांक</strong>, <strong>जन्मतारीख</strong>, <strong>वडिलांचे नाव</strong> टाका</li>
+      <li><strong>इयत्ता</strong>, <strong>तुकडी</strong>, <strong>प्रवर्ग</strong> निवडा</li>
+      <li>फोटो अपलोड करण्यासाठी विद्यार्थ्याच्या फोटो जागेवर क्लिक करा</li>
+      <li><span class="btn-label gold">जतन करा</span> बटणावर क्लिक करा</li>
+    </ol>
+
+    <h3 class="sub-head">विद्यार्थी शोधणे व फिल्टर करणे</h3>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="fc-icon">🔍</span>
+        <div><h4>नाव / GR शोध</h4><p>शोध चौकटीत नाव किंवा GR क्रमांक टाका — यादी आपोआप फिल्टर होईल</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">🏫</span>
+        <div><h4>शाळा निवड</h4><p>कोणत्या शाळेचे विद्यार्थी पाहायचे ते निवडा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">📚</span>
+        <div><h4>इयत्ता फिल्टर</h4><p>विशिष्ट इयत्तेचे विद्यार्थी पाहण्यासाठी इयत्ता निवडा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">📊</span>
+        <div><h4>Excel आयात</h4><p>Excel फाइलमधून एकत्र विद्यार्थी नोंदवा — वरील Excel आयात बटण वापरा</p></div>
+      </div>
+    </div>
+
+    <h3 class="sub-head">विद्यार्थी माहिती बदलणे</h3>
+    <ol class="steps">
+      <li>विद्यार्थ्याच्या ओळीत ✏️ (संपादन) बटणावर क्लिक करा</li>
+      <li>हवी ती माहिती बदला</li>
+      <li><span class="btn-label gold">जतन करा</span> क्लिक करा</li>
+    </ol>
+
+    <div class="info-box info-note">
+      <span class="box-icon">📌</span>
+      <div><strong>ओळख पत्र (ID Card):</strong> यादीत विद्यार्थी निवडा (चेकबॉक्स) → वरील <span class="btn-label">ओळख पत्र</span> बटणावर क्लिक करा → मराठी / English निवडा → PDF तयार होईल.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 4: STAFF
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">👩‍🏫</span>
+    <span><span class="sect-num">प्रकरण ४</span>कर्मचारी व्यवस्थापन</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/04-staff.png" alt="कर्मचारी यादी" />
+      <div class="screenshot-caption">👩‍🏫 कर्मचारी व्यवस्थापन — कर्मचारी यादी</div>
+    </div>
+
+    <h3 class="sub-head">नवीन कर्मचारी कसा जोडावा?</h3>
+    <ol class="steps">
+      <li><span class="btn-label gold">+ नवीन कर्मचारी</span> बटणावर क्लिक करा</li>
+      <li><strong>मराठी नाव</strong>, <strong>इंग्रजी नाव</strong> भरा</li>
+      <li><strong>पद</strong> (मुख्याध्यापक / शिक्षक इ.), <strong>कर्मचारी प्रकार</strong> निवडा</li>
+      <li><strong>दूरध्वनी</strong>, <strong>ईमेल</strong>, <strong>पगाराची माहिती</strong> भरा</li>
+      <li>फोटो अपलोड करण्यासाठी फोटो जागेवर क्लिक करा</li>
+      <li><span class="btn-label gold">जतन करा</span> बटण दाबा</li>
+    </ol>
+
+    <table class="desc-table avoid-break">
+      <thead><tr><th>स्तंभ</th><th>माहिती</th></tr></thead>
+      <tbody>
+        <tr><td>नाव</td><td>मराठी व इंग्रजी नाव — फोटोसकट</td></tr>
+        <tr><td>पद</td><td>कर्मचाऱ्याचे पदनाम (मुख्याध्यापक, सहायक शिक्षक इ.)</td></tr>
+        <tr><td>शाळा</td><td>कोणत्या शाळेत कार्यरत</td></tr>
+        <tr><td>कर्मचारी प्रकार</td><td>कायम / अनुदानित / विनाअनुदान इ.</td></tr>
+        <tr><td>स्थिती</td><td>सक्रिय / निष्क्रिय</td></tr>
+        <tr><td>कृती</td><td>संपादन / निष्क्रिय करणे</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box info-tip">
+      <span class="box-icon">🪪</span>
+      <div><strong>कर्मचारी ओळख पत्र:</strong> कर्मचारी निवडा → ओळख पत्र बटणावर क्लिक करा → भाषा निवडा → PDF डाउनलोड होईल.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 5: ATTENDANCE
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">📅</span>
+    <span><span class="sect-num">प्रकरण ५</span>हजेरी — दैनिक उपस्थिती</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/05-attendance.png" alt="हजेरी पृष्ठ" />
+      <div class="screenshot-caption">📅 दैनिक हजेरी नोंद पृष्ठ</div>
+    </div>
+
+    <h3 class="sub-head">आजची हजेरी कशी घ्यावी?</h3>
+    <ol class="steps">
+      <li>डाव्या मेनूतून <strong>हजेरी</strong> वर क्लिक करा</li>
+      <li>वरील ड्रॉपडाउनमधून <strong>शाळा</strong> निवडा (आपोआप निवड होते)</li>
+      <li><strong>तारीख</strong> योग्य आहे का पाहा — आज तारीख आपोआप असते</li>
+      <li>प्रत्येक विद्यार्थ्यासाठी <span class="btn-label green">उपस्थित</span>, <span class="btn-label red">अनुपस्थित</span>, किंवा <strong>उशिरा</strong> / <strong>अर्धदिवस</strong> निवडा</li>
+      <li>सर्वांना एकत्र <span class="btn-label green">सर्व उपस्थित</span> किंवा <span class="btn-label red">सर्व अनुपस्थित</span> बटणाने मार्क करता येते</li>
+      <li>शेवटी <span class="btn-label gold">हजेरी जतन करा</span> बटणावर क्लिक करा</li>
+    </ol>
+
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="fc-icon">✅</span>
+        <div><h4>उपस्थित</h4><p>विद्यार्थी शाळेत आला — हिरव्या बटणावर क्लिक करा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">❌</span>
+        <div><h4>अनुपस्थित</h4><p>विद्यार्थी आला नाही — लाल बटणावर क्लिक करा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">⏰</span>
+        <div><h4>उशिरा</h4><p>विद्यार्थी उशिरा आला — उशिरा बटण दाबा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">📊</span>
+        <div><h4>सारांश</h4><p>वर उपस्थिती टक्केवारी व एकूण संख्या दिसते</p></div>
+      </div>
+    </div>
+
+    <div class="info-box info-note">
+      <span class="box-icon">📌</span>
+      <div><strong>लक्षात ठेवा:</strong> हजेरी जतन केल्यावर त्याच दिवसाची हजेरी बदलता येते — तारीख निवडा आणि पुन्हा जतन करा.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 6: EXAMS
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">📝</span>
+    <span><span class="sect-num">प्रकरण ६</span>परीक्षा व गुण नोंद</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/06-exams.png" alt="परीक्षा व्यवस्थापन" />
+      <div class="screenshot-caption">📝 परीक्षा व्यवस्थापन — परीक्षा यादी</div>
+    </div>
+
+    <h3 class="sub-head">नवीन परीक्षा कशी तयार करावी?</h3>
+    <ol class="steps">
+      <li><span class="btn-label gold">+ नवीन परीक्षा</span> बटणावर क्लिक करा</li>
+      <li><strong>परीक्षेचे नाव</strong> भरा (उदा. प्रथम सत्र परीक्षा)</li>
+      <li><strong>प्रकार</strong> निवडा (अर्धवार्षिक / वार्षिक / सातत्यपूर्ण)</li>
+      <li><strong>सुरुवात व शेवट तारीख</strong> निवडा</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा</li>
+    </ol>
+
+    <h3 class="sub-head">गुण कसे नोंदवावे?</h3>
+    <ol class="steps">
+      <li>परीक्षा यादीत <span class="btn-label">गुण नोंद</span> बटणावर क्लिक करा</li>
+      <li>प्रत्येक विद्यार्थ्यासाठी विषयनिहाय गुण टाका</li>
+      <li>सर्व गुण टाकल्यावर <span class="btn-label gold">जतन करा</span> बटण दाबा</li>
+    </ol>
+
+    <div class="info-box info-tip">
+      <span class="box-icon">✅</span>
+      <div>गुण नोंद केल्यावर <strong>अहवाल केंद्रातून</strong> प्रगती अहवाल PDF स्वरूपात काढता येतो.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 7: FEES
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">💰</span>
+    <span><span class="sect-num">प्रकरण ७</span>शुल्क व्यवस्थापन</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/07-fees.png" alt="शुल्क व्यवस्थापन" />
+      <div class="screenshot-caption">💰 शुल्क व्यवस्थापन — फी संकलन पृष्ठ</div>
+    </div>
+
+    <h3 class="sub-head">शुल्क संकलन (फी घेणे) कसे करावे?</h3>
+    <ol class="steps">
+      <li>डाव्या मेनूतून <strong>शुल्क</strong> वर क्लिक करा</li>
+      <li><strong>शुल्क संकलन</strong> टॅब निवडला आहे का ते पाहा</li>
+      <li>डाव्या पॅनलमध्ये <strong>इयत्ता</strong> आणि <strong>तुकडी</strong> निवडा, मग विद्यार्थ्याचे <strong>नाव</strong> निवडा</li>
+      <li>उजव्या बाजूला विद्यार्थ्याची <strong>थकबाकी</strong> व <strong>मागणी यादी</strong> दिसेल</li>
+      <li>किती फी घ्यायची ते निवडा (सर्व चेक केलेले असतात)</li>
+      <li><span class="btn-label gold">फी घ्या</span> बटणावर क्लिक करा</li>
+      <li>भरणा पद्धत (रोख / UPI / ऑनलाइन) निवडा आणि <span class="btn-label gold">पुष्टी करा</span></li>
+      <li>पावती आपोआप तयार होईल — PDF डाउनलोड करा</li>
+    </ol>
+
+    <h3 class="sub-head">शुल्क रचना (Fee Structure) कशी तयार करावी?</h3>
+    <ol class="steps">
+      <li><strong>शुल्क रचना</strong> टॅबवर क्लिक करा</li>
+      <li><span class="btn-label gold">+ नवीन रचना</span> बटणावर क्लिक करा</li>
+      <li>शुल्काचे नाव, रक्कम, लागू इयत्ता निवडा</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा — या रचनेनुसार आपोआप मागणी तयार होईल</li>
+    </ol>
+
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="fc-icon">📋</span>
+        <div><h4>वर्गवार यादी</h4><p>इयत्तानिहाय विद्यार्थ्यांची शुल्क स्थिती एकत्र पाहा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">⚠️</span>
+        <div><h4>थकबाकीदार</h4><p>शुल्क न भरलेल्या विद्यार्थ्यांची यादी — SMS पाठवण्याची सुविधा</p></div>
+      </div>
+    </div>
+
+    <div class="info-box info-note">
+      <span class="box-icon">📌</span>
+      <div><strong>सवलत (Concession):</strong> शुल्क रचना विभागात विद्यार्थ्याला सवलत देण्याची सुविधा आहे. विद्यार्थी निवडा → सवलत रक्कम किंवा टक्केवारी टाका.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 8: SALARY
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">💵</span>
+    <span><span class="sect-num">प्रकरण ८</span>वेतन व्यवस्थापन</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/08-salary.png" alt="वेतन व्यवस्थापन" />
+      <div class="screenshot-caption">💵 वेतन व्यवस्थापन — वेतन स्लिप यादी</div>
+    </div>
+
+    <h3 class="sub-head">नवीन वेतन स्लिप कशी तयार करावी?</h3>
+    <ol class="steps">
+      <li><span class="btn-label gold">+ नवीन वेतन स्लिप</span> बटणावर क्लिक करा</li>
+      <li><strong>कर्मचारी</strong> निवडा — मागील महिन्याचे तपशील आपोआप भरतात</li>
+      <li><strong>महिना</strong> आणि <strong>वर्ष</strong> निवडा</li>
+      <li><strong>वेतन घटक</strong> (मूळ वेतन, DA, HRA इ.) तपासा व आवश्यक असल्यास बदला</li>
+      <li><strong>कपात</strong> (PF, PT इ.) तपासा</li>
+      <li><span class="btn-label gold">स्लिप तयार करा</span> बटण दाबा</li>
+      <li>वेतन दिल्यावर <span class="btn-label green">वेतन दिले</span> बटणावर क्लिक करा — जमा-खर्चात नोंद होईल</li>
+    </ol>
+
+    <h3 class="sub-head">वेतन घटक (Salary Components) कसे सेट करावे?</h3>
+    <ol class="steps">
+      <li><strong>वेतन घटक</strong> टॅबवर क्लिक करा</li>
+      <li><span class="btn-label gold">+ नवीन घटक</span> बटण दाबा</li>
+      <li>घटकाचे नाव (Basic Pay, DA, HRA इ.) व प्रकार (उत्पन्न/कपात) निवडा</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा</li>
+    </ol>
+
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="fc-icon">📄</span>
+        <div><h4>PDF स्लिप</h4><p>कर्मचाऱ्याला देण्यासाठी PDF वेतन स्लिप डाउनलोड करा</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">🔄</span>
+        <div><h4>स्वयंपूर्ण</h4><p>मागील महिन्याचे वेतन आपोआप भरते — फक्त तपासा</p></div>
+      </div>
+    </div>
+
+    <div class="info-box info-tip">
+      <span class="box-icon">✅</span>
+      <div>वेतन "दिले" म्हणून मार्क केल्यावर <strong>जमा-खर्च</strong> विभागात आपोआप खर्चाची नोंद होते.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 9: CERTIFICATES
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">📄</span>
+    <span><span class="sect-num">प्रकरण ९</span>प्रमाणपत्रे</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/09-certificates.png" alt="प्रमाणपत्रे" />
+      <div class="screenshot-caption">📄 प्रमाणपत्र व्यवस्थापन — जारी केलेली प्रमाणपत्रे</div>
+    </div>
+
+    <h3 class="sub-head">नवीन प्रमाणपत्र कसे द्यावे?</h3>
+    <ol class="steps">
+      <li><span class="btn-label gold">+ प्रमाणपत्र द्या</span> बटणावर क्लिक करा</li>
+      <li><strong>विद्यार्थी</strong> निवडा (नाव टाइप करून शोधा)</li>
+      <li><strong>प्रमाणपत्र प्रकार</strong> निवडा:
+        <ul style="margin: 6px 0 0 20px; list-style: disc;">
+          <li><strong>बोनाफाईड प्रमाणपत्र</strong> — विद्यार्थी शाळेत शिकतो याचा पुरावा</li>
+          <li><strong>स्थानांतरण प्रमाणपत्र (TC)</strong> — शाळा बदलताना</li>
+        </ul>
+      </li>
+      <li><strong>कारण</strong> भरा (शिष्यवृत्ती / बँक / इतर)</li>
+      <li><span class="btn-label gold">जतन करा</span> बटण दाबा</li>
+      <li>PDF बटणावर क्लिक करून प्रमाणपत्र डाउनलोड करा</li>
+    </ol>
+
+    <table class="desc-table avoid-break">
+      <thead><tr><th>स्तंभ</th><th>माहिती</th></tr></thead>
+      <tbody>
+        <tr><td>क्र. (BON-XXXX)</td><td>प्रमाणपत्राचा अनुक्रमांक</td></tr>
+        <tr><td>विद्यार्थी</td><td>विद्यार्थ्याचे नाव व पालकाचे नाव</td></tr>
+        <tr><td>प्रकार</td><td>बोनाफाईड / TC</td></tr>
+        <tr><td>दिनांक</td><td>प्रमाणपत्र दिल्याची तारीख</td></tr>
+        <tr><td>कारण</td><td>देण्याचे कारण</td></tr>
+        <tr><td>स्थिती</td><td>दिले / रद्द</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box info-warn">
+      <span class="box-icon">⚠️</span>
+      <div>एकदा दिलेले प्रमाणपत्र रद्द <span class="btn-label red">🚫</span> करता येते, पण हटवता येत नाही. प्रत्येक प्रमाणपत्राचा अनुक्रमांक नोंदवला जातो.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 10: REPORTS
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">📊</span>
+    <span><span class="sect-num">प्रकरण १०</span>अहवाल केंद्र</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/10-reports.png" alt="अहवाल केंद्र" />
+      <div class="screenshot-caption">📊 अहवाल केंद्र — नामनिर्देशिका अहवाल</div>
+    </div>
+
+    <h3 class="sub-head">उपलब्ध अहवाल</h3>
+    <table class="desc-table avoid-break">
+      <thead><tr><th>विभाग</th><th>अहवाल नाव</th><th>उपयोग</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="4">विद्यार्थी</td><td>नामनिर्देशिका / GR नोंदवही</td><td>सर्व विद्यार्थ्यांची यादी — मुद्रण / Excel</td></tr>
+        <tr><td>वर्गनिहाय शक्ती</td><td>इयत्तानिहाय विद्यार्थी संख्या</td></tr>
+        <tr><td>प्रवर्गनिहाय सारांश</td><td>SC/ST/OBC/General इ. प्रवर्ग</td></tr>
+        <tr><td>नवीन प्रवेश</td><td>या वर्षी प्रवेश घेतलेले विद्यार्थी</td></tr>
+        <tr><td rowspan="3">शुल्क</td><td>शुल्क संकलन सारांश</td><td>एकूण जमा, पद्धतनिहाय, शाळानिहाय — PDF</td></tr>
+        <tr><td>थकबाकी यादी</td><td>फी न भरलेले विद्यार्थी</td></tr>
+        <tr><td>पावती नोंदवही</td><td>सर्व पावत्यांची यादी</td></tr>
+        <tr><td>कर्मचारी</td><td>कर्मचारी नोंदवही</td><td>सर्व कर्मचाऱ्यांची माहिती</td></tr>
+        <tr><td>कर्मचारी</td><td>वेतन सारांश</td><td>महिन्यानुसार वेतन सारांश</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-head">अहवाल कसा काढावा?</h3>
+    <ol class="steps">
+      <li>डाव्या पॅनलमधून हवा अहवाल निवडा</li>
+      <li>फिल्टर निवडा — शाळा, शैक्षणिक वर्ष, इयत्ता इ.</li>
+      <li><span class="btn-label">मुद्रित करा</span> — PDF अहवाल तयार होईल</li>
+      <li><span class="btn-label">Excel</span> — Excel फाइल डाउनलोड होईल</li>
+    </ol>
+
+    <div class="info-box info-tip">
+      <span class="box-icon">✅</span>
+      <div>सर्व PDF अहवालांवर संस्थेचा लोगो, नाव, तारीख, वापरकर्त्याचे नाव आणि पान क्रमांक आपोआप येतो.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 11: ACCOUNTS
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">📒</span>
+    <span><span class="sect-num">प्रकरण ११</span>जमा-खर्च व्यवस्थापन</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/11-accounts.png" alt="जमा-खर्च" />
+      <div class="screenshot-caption">📒 जमा-खर्च व्यवस्थापन — उत्पन्न व खर्च नोंदी</div>
+    </div>
+
+    <h3 class="sub-head">जमा (उत्पन्न) नोंद कशी करावी?</h3>
+    <ol class="steps">
+      <li><span class="btn-label green">+ जमा नोंद</span> बटणावर क्लिक करा</li>
+      <li><strong>विभाग</strong> (Category) निवडा — देणगी / अनुदान / इतर उत्पन्न</li>
+      <li><strong>वर्णन</strong> (मराठीत) भरा</li>
+      <li><strong>रक्कम</strong>, <strong>तारीख</strong>, <strong>भरणा पद्धत</strong> भरा</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा</li>
+    </ol>
+
+    <h3 class="sub-head">खर्च नोंद कशी करावी?</h3>
+    <ol class="steps">
+      <li><span class="btn-label red">+ खर्च नोंद</span> बटणावर क्लिक करा</li>
+      <li>खर्चाचा <strong>विभाग</strong>, <strong>वर्णन</strong>, <strong>रक्कम</strong>, <strong>तारीख</strong> भरा</li>
+      <li>पक्ष (Party name) असल्यास भरा</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा</li>
+    </ol>
+
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="fc-icon">📊</span>
+        <div><h4>डॅशबोर्ड कार्ड्स</h4><p>एकूण जमा, एकूण खर्च, शिल्लक — वरती दिसतात</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">📕</span>
+        <div><h4>रोखवही (Cash Book)</h4><p>कालानुक्रमे सर्व नोंदी — running balance सहित</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">📈</span>
+        <div><h4>अहवाल</h4><p>मासिक सारांश, प्रकारनिहाय, वार्षिक P&L</p></div>
+      </div>
+      <div class="feat-card">
+        <span class="fc-icon">🏛️</span>
+        <div><h4>बजेट</h4><p>नियोजित बजेट विरुद्ध प्रत्यक्ष खर्च — लवकरच येत आहे</p></div>
+      </div>
+    </div>
+
+    <div class="info-box info-tip">
+      <span class="box-icon">✅</span>
+      <div>वेतन "दिले" केल्यावर व शुल्क स्वीकारल्यावर <strong>जमा-खर्चात आपोआप नोंद</strong> होते — वेगळी नोंद करण्याची गरज नाही.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 12: CLASSES
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">🏫</span>
+    <span><span class="sect-num">प्रकरण १२</span>इयत्ता व तुकड्या</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/12-classes.png" alt="इयत्ता व तुकड्या" />
+      <div class="screenshot-caption">🏫 इयत्ता व तुकड्या व्यवस्थापन</div>
+    </div>
+
+    <h3 class="sub-head">नवीन इयत्ता कशी जोडावी?</h3>
+    <ol class="steps">
+      <li><strong>शाळा</strong> व <strong>शैक्षणिक वर्ष</strong> निवडा</li>
+      <li><span class="btn-label gold">+ इयत्ता जोडा</span> बटणावर क्लिक करा</li>
+      <li>इयत्तेचे नाव (उदा. इयत्ता पहिली), स्तर निवडा</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा</li>
+    </ol>
+
+    <h3 class="sub-head">तुकडी (Division) कशी जोडावी?</h3>
+    <ol class="steps">
+      <li>इयत्तेच्या ओळीत <strong>+</strong> (plus) चिन्हावर क्लिक करा</li>
+      <li>तुकडीचे नाव टाका (उदा. अ, ब, क किंवा A, B)</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा</li>
+    </ol>
+
+    <div class="info-box info-note">
+      <span class="box-icon">📌</span>
+      <div><strong>महत्त्वाचे:</strong> नवीन शैक्षणिक वर्षाच्या सुरुवातीला इयत्ता व तुकड्या <strong>आधी</strong> जोडा — नंतरच विद्यार्थी प्रवेश करता येतो.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 13: SETUP
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">⚙️</span>
+    <span><span class="sect-num">प्रकरण १३</span>सेटअप — प्रशासन</span>
+  </h2>
+  <div class="section-inner">
+    <div class="screenshot-box avoid-break">
+      <img src="./manual-ss/13-setup.png" alt="सेटअप" />
+      <div class="screenshot-caption">⚙️ सेटअप — संस्था माहिती व प्रशासन</div>
+    </div>
+
+    <h3 class="sub-head">सेटअपमधील विभाग</h3>
+    <table class="desc-table avoid-break">
+      <thead><tr><th>विभाग</th><th>काय सेट करता येते</th></tr></thead>
+      <tbody>
+        <tr><td>📋 संस्था माहिती</td><td>संस्थेचे नाव (मराठी/इंग्रजी), PTR क्रमांक, UDISE, पत्ता, ईमेल, लोगो अपलोड</td></tr>
+        <tr><td>🏫 शाळा / घटक</td><td>संस्थेच्या अंतर्गत शाळा जोडा, शाळेचे नाव, UDISE, पत्ता</td></tr>
+        <tr><td>📅 शैक्षणिक वर्षे</td><td>शैक्षणिक वर्ष जोडा, चालू वर्ष सेट करा</td></tr>
+        <tr><td>🔐 भूमिका / परवानग्या</td><td>वापरकर्त्यांसाठी भूमिका तयार करा (संचालक / मुख्याध्यापक / लिपिक इ.)</td></tr>
+        <tr><td>👤 वापरकर्ते</td><td>नवीन वापरकर्ता तयार करा, भूमिका द्या, पासवर्ड रीसेट करा</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-head">नवीन वापरकर्ता कसा तयार करावा?</h3>
+    <ol class="steps">
+      <li>सेटअप → <strong>वापरकर्ते</strong> वर क्लिक करा</li>
+      <li><span class="btn-label gold">+ नवीन वापरकर्ता</span> बटण दाबा</li>
+      <li><strong>नाव</strong>, <strong>ईमेल</strong>, <strong>भूमिका</strong> भरा</li>
+      <li>प्रारंभिक <strong>पासवर्ड</strong> सेट करा</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा</li>
+    </ol>
+
+    <h3 class="sub-head">लोगो कसा अपलोड करावा?</h3>
+    <ol class="steps">
+      <li>सेटअप → <strong>संस्था माहिती</strong> वर क्लिक करा</li>
+      <li><span class="btn-label">लोगो अपलोड करा</span> बटणावर क्लिक करा</li>
+      <li>PNG / JPEG / SVG फाइल निवडा (जास्तीत जास्त २ MB)</li>
+      <li><span class="btn-label gold">जतन करा</span> दाबा — सर्व PDF मध्ये लोगो येईल</li>
+    </ol>
+
+    <div class="info-box info-warn">
+      <span class="box-icon">🔒</span>
+      <div><strong>सुरक्षा:</strong> भूमिका काळजीपूर्वक द्या. संचालकाला सर्व अधिकार असतात; इतर भूमिकांना मर्यादित प्रवेश असतो.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     QUICK REFERENCE
+════════════════════════════════════════════════════════════════ -->
+<div class="section-wrapper page-break">
+  <h2 class="section-title">
+    <span class="sect-icon">⚡</span>
+    <span><span class="sect-num">परिशिष्ट</span>त्वरित संदर्भ मार्गदर्शिका</span>
+  </h2>
+  <div class="section-inner">
+
+    <h3 class="sub-head">दैनंदिन कामे — क्रमवारी</h3>
+    <ol class="steps">
+      <li><strong>सकाळी:</strong> हजेरी → विद्यार्थी उपस्थिती नोंदवा → जतन करा</li>
+      <li><strong>फी आल्यावर:</strong> शुल्क → विद्यार्थी निवडा → फी घ्या → पावती द्या</li>
+      <li><strong>महिना अखेर:</strong> वेतन → नवीन स्लिप → तपासा → दिले मार्क करा</li>
+      <li><strong>परीक्षेनंतर:</strong> परीक्षा → गुण नोंद → जतन करा</li>
+      <li><strong>अहवाल हवा असल्यास:</strong> अहवाल केंद्र → प्रकार निवडा → मुद्रित करा</li>
+    </ol>
+
+    <h3 class="sub-head">सामान्य प्रश्नोत्तरे (FAQ)</h3>
+    <div class="info-box info-note" style="margin-bottom:10px;">
+      <span class="box-icon">❓</span>
+      <div><strong>Q: विद्यार्थी कसा शोधायचा?</strong><br/>A: विद्यार्थी पृष्ठावर शोध चौकटीत नाव किंवा GR क्रमांक टाका.</div>
+    </div>
+    <div class="info-box info-note" style="margin-bottom:10px;">
+      <span class="box-icon">❓</span>
+      <div><strong>Q: चुकीची हजेरी सुधारता येईल का?</strong><br/>A: हो — हजेरी पृष्ठावर जा, तारीख बदला, सुधारा, पुन्हा जतन करा.</div>
+    </div>
+    <div class="info-box info-note" style="margin-bottom:10px;">
+      <span class="box-icon">❓</span>
+      <div><strong>Q: PDF मध्ये शाळेचा लोगो येत नाही?</strong><br/>A: सेटअप → संस्था माहिती → लोगो अपलोड करा → जतन करा.</div>
+    </div>
+    <div class="info-box info-note" style="margin-bottom:10px;">
+      <span class="box-icon">❓</span>
+      <div><strong>Q: इयत्ता / तुकडी दिसत नाही?</strong><br/>A: सेटअप → इयत्ता व तुकड्या → योग्य शाळा व वर्ष निवडा → इयत्ता जोडा.</div>
+    </div>
+    <div class="info-box info-note" style="margin-bottom:10px;">
+      <span class="box-icon">❓</span>
+      <div><strong>Q: वेगळ्या शाळेचा डेटा कसा पाहायचा?</strong><br/>A: वरच्या हेडरमध्ये शाळा निवड ड्रॉपडाउनमधून शाळा बदला.</div>
+    </div>
+
+    <h3 class="sub-head">महत्त्वाचे संपर्क</h3>
+    <table class="desc-table">
+      <thead><tr><th>विषय</th><th>कुठे जायचे</th></tr></thead>
+      <tbody>
+        <tr><td>तांत्रिक मदत</td><td>संस्था IT प्रशासक</td></tr>
+        <tr><td>पासवर्ड रीसेट</td><td>सेटअप → वापरकर्ते → संचालक</td></tr>
+        <tr><td>नवीन शाळा जोडणे</td><td>सेटअप → शाळा / घटक</td></tr>
+        <tr><td>डेटा बॅकअप</td><td>IT प्रशासकाशी संपर्क करा</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════ -->
+<div class="manual-footer">
+  <strong>शाळा ERP — VidyaSetu</strong> | वापरकर्ता मार्गदर्शिका आवृत्ती १.०<br/>
+  Developed by <strong>Akshay Navale</strong> · सर्व हक्क राखीव<br/>
+  <span style="opacity:0.5; font-size:0.72rem;">हे दस्तऐवज मुद्रणासाठी तयार आहे — Ctrl+P दाबून PDF सेव्ह करा</span>
+</div>
+
+</body>
+</html>
