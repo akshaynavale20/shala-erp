@@ -186,7 +186,7 @@ async function seed() {
       sansthaRepo.create({
         nameMr: 'चाचणी शिक्षण संस्था',
         nameEn: 'Test Education Trust',
-        email: 'admin@sanstha.edu',
+        email: 'admin@lokvikas.com',
         phone: '9999999999',
       }),
     );
@@ -222,20 +222,20 @@ async function seed() {
 
   // ── 3. Director user
   const userRepo = ds.getRepository(User);
-  let director = await userRepo.findOne({ where: { email: 'director@sanstha.edu' } });
+  let director = await userRepo.findOne({ where: { email: 'admin@lokvikas.com' } });
   if (!director) {
     director = await userRepo.save(
       userRepo.create({
         sansthaId: sanstha.id,
         nameMr: 'संस्था संचालक',
-        email: 'director@sanstha.edu',
+        email: 'admin@lokvikas.com',
         passwordHash: await bcrypt.hash('Admin@1234', 12),
         mustChangePassword: false,
         isActive: true,
       }),
     );
     console.log('✅ Director user created');
-    console.log('   Email:    director@sanstha.edu');
+    console.log('   Email:    admin@lokvikas.com');
     console.log('   Password: Admin@1234');
   }
 
