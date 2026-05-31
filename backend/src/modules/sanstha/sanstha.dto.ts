@@ -1,5 +1,6 @@
 import { IsString, IsOptional, IsEmail, IsBoolean } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateSansthaDto {
   @ApiProperty({ example: 'श्री ज्ञानदीप शिक्षण संस्था' })
@@ -37,4 +38,4 @@ export class CreateSansthaDto {
   email?: string;
 }
 
-export class UpdateSansthaDto extends CreateSansthaDto {}
+export class UpdateSansthaDto extends PartialType(CreateSansthaDto) {}
