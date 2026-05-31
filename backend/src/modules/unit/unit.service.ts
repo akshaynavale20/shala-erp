@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Unit } from './unit.entity';
 import { IsString, IsOptional, IsBoolean, IsEnum, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 import { UnitType } from './unit.entity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -15,9 +16,9 @@ export class CreateUnitDto {
   @IsOptional() @IsString() addressMr?: string;
   @IsOptional() @IsString() phone?: string;
   @IsOptional() @IsString() email?: string;
-  @IsOptional() @IsBoolean() aided?: boolean;
+  @IsOptional() @Type(() => Boolean) @IsBoolean() aided?: boolean;
   @IsOptional() @IsString() divisionalBoard?: string;
-  @IsOptional() @IsNumber() establishedYear?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() establishedYear?: number;
 }
 
 @Injectable()
