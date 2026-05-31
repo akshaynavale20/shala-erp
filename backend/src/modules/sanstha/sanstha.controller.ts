@@ -3,8 +3,7 @@ import {
   UseInterceptors, UploadedFile, BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { memoryStorage } from 'multer';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiConsumes } from '@nestjs/swagger';
 import { SansthaService } from './sanstha.service';
 import { CreateSansthaDto, UpdateSansthaDto } from './sanstha.dto';
@@ -12,21 +11,17 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RequirePermissions } from '../../common/decorators/permissions.decorator';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { PERMISSIONS } from '../role/role.entity';
-
-const logoStorage = diskStorage({
-  destination: './uploads',
-  filename: (_req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `logo-${unique}${extname(file.originalname)}`);
-  },
-});
+import { S3UploadService } from '../../common/services/s3-upload.service';
 
 @ApiTags('संस्था')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('api/v1/sanstha')
 export class SansthaController {
-  constructor(private readonly service: SansthaService) {}
+  constructor(
+    private readonly service: SansthaService,
+    private readonly s3: S3UploadService,
+  ) {}
 
   @Post()
   @RequirePermissions(PERMISSIONS.SETUP_MANAGE)
@@ -59,9 +54,9 @@ export class SansthaController {
   @Post(':id/logo')
   @RequirePermissions(PERMISSIONS.SETUP_MANAGE)
   @ApiConsumes('multipart/form-data')
-  @ApiOperation({ summary: 'संस्थेचा लोगो अपलोड करा' })
+  @ApiOperation({ summary: 'संस्थेचा लोगो S3 वर अपलोड करा' })
   @UseInterceptors(FileInterceptor('logo', {
-    storage: logoStorage,
+    storage: memoryStorage(),
     limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB
     fileFilter: (_req, file, cb) => {
       if (!file.mimetype.match(/^image\/(png|jpeg|jpg|svg\+xml)$/)) {
@@ -75,7 +70,10 @@ export class SansthaController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('लोगो फाईल आवश्यक आहे');
-    const logoUrl = `/uploads/${file.filename}`;
+    // Delete old logo if it was on S3
+    const existing = await this.service.findOne(id);
+    await this.s3.deleteIfS3(existing?.logoUrl);
+    const logoUrl = await this.s3.upload(file, 'logos');
     return this.service.uploadLogo(id, logoUrl);
   }
 }

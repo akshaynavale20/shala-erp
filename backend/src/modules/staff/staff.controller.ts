@@ -3,8 +3,7 @@ import {
   UseGuards, UseInterceptors, UploadedFile, BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { memoryStorage } from 'multer';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiConsumes } from '@nestjs/swagger';
 import { StaffService } from './staff.service';
 import { CreateStaffDto, UpdateStaffDto } from './staff.dto';
@@ -13,21 +12,17 @@ import { RequirePermissions } from '../../common/decorators/permissions.decorato
 import { CurrentSansthaId } from '../../common/decorators/current-sanstha-id.decorator';
 import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { PERMISSIONS } from '../role/role.entity';
-
-const photoStorage = diskStorage({
-  destination: './uploads',
-  filename: (_req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `staff-${unique}${extname(file.originalname)}`);
-  },
-});
+import { S3UploadService } from '../../common/services/s3-upload.service';
 
 @ApiTags('कर्मचारी')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('api/v1/staff')
 export class StaffController {
-  constructor(private readonly service: StaffService) {}
+  constructor(
+    private readonly service: StaffService,
+    private readonly s3: S3UploadService,
+  ) {}
 
   @Post()
   @RequirePermissions(PERMISSIONS.STAFF_CREATE)
@@ -70,9 +65,9 @@ export class StaffController {
   @Post(':id/photo')
   @RequirePermissions(PERMISSIONS.STAFF_EDIT)
   @ApiConsumes('multipart/form-data')
-  @ApiOperation({ summary: 'कर्मचारी फोटो अपलोड करा' })
+  @ApiOperation({ summary: 'कर्मचारी फोटो S3 वर अपलोड करा' })
   @UseInterceptors(FileInterceptor('photo', {
-    storage: photoStorage,
+    storage: memoryStorage(),
     limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB
     fileFilter: (_req, file, cb) => {
       if (!file.mimetype.match(/^image\/(png|jpeg|jpg)$/)) {
@@ -86,7 +81,9 @@ export class StaffController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('फोटो फाईल आवश्यक आहे');
-    const photoUrl = `/uploads/${file.filename}`;
+    const existing = await this.service.findOne(id);
+    await this.s3.deleteIfS3(existing?.photoUrl);
+    const photoUrl = await this.s3.upload(file, 'staff-photos');
     return this.service.uploadPhoto(id, photoUrl);
   }
 }

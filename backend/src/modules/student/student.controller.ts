@@ -1,11 +1,9 @@
 import {
   Controller, Get, Post, Put, Body, Param, Query,
   UseGuards, Delete, UseInterceptors, UploadedFile, BadRequestException,
-  ParseFilePipe, MaxFileSizeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { memoryStorage } from 'multer';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { StudentService } from './student.service';
 import { CreateStudentDto, UpdateStudentDto } from './student.dto';
@@ -14,20 +12,17 @@ import { PermissionsGuard } from '../../common/guards/permissions.guard';
 import { RequirePermissions } from '../../common/decorators/permissions.decorator';
 import { CurrentSansthaId } from '../../common/decorators/current-sanstha-id.decorator';
 import { PERMISSIONS } from '../role/role.entity';
-
-const photoStorage = diskStorage({
-  destination: './uploads',
-  filename: (_req, file, cb) => {
-    cb(null, `student-${Date.now()}-${Math.round(Math.random() * 1e9)}${extname(file.originalname)}`);
-  },
-});
+import { S3UploadService } from '../../common/services/s3-upload.service';
 
 @ApiTags('विद्यार्थी')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('api/v1/students')
 export class StudentController {
-  constructor(private readonly service: StudentService) {}
+  constructor(
+    private readonly service: StudentService,
+    private readonly s3: S3UploadService,
+  ) {}
 
   @Post()
   @RequirePermissions(PERMISSIONS.STUDENT_CREATE)
@@ -56,7 +51,7 @@ export class StudentController {
 
   @Post('import')
   @RequirePermissions(PERMISSIONS.STUDENT_CREATE)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
   async importExcel(
     @CurrentSansthaId() sansthaId: string,
     @Query('unitId') unitId: string,
@@ -70,15 +65,21 @@ export class StudentController {
   @Post(':id/photo')
   @RequirePermissions(PERMISSIONS.STUDENT_EDIT)
   @UseInterceptors(FileInterceptor('photo', {
-    storage: photoStorage,
+    storage: memoryStorage(),
     limits: { fileSize: 1024 * 1024 },
     fileFilter: (_req, file, cb) => {
       if (!file.mimetype.match(/^image\/(png|jpeg|jpg)$/)) return cb(new BadRequestException('फक्त PNG/JPEG'), false);
       cb(null, true);
     },
   }))
-  uploadPhoto(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+  async uploadPhoto(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     if (!file) throw new BadRequestException('फोटो आवश्यक आहे');
-    return this.service.uploadPhoto(id, `/uploads/${file.filename}`);
+    const existing = await this.service.findOne(id);
+    await this.s3.deleteIfS3(existing?.photoUrl);
+    const photoUrl = await this.s3.upload(file, 'student-photos');
+    return this.service.uploadPhoto(id, photoUrl);
   }
 }

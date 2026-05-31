@@ -60,6 +60,36 @@ jobs:
             --paths "/index.html" \
             --region us-east-1
 
+      - name: Ensure uploads S3 bucket exists
+        run: |
+          BUCKET="shala-erp-uploads-prod"
+          REGION="ap-south-1"
+          if ! aws s3api head-bucket --bucket "$BUCKET" --region "$REGION" 2>/dev/null; then
+            echo "Creating uploads bucket: $BUCKET"
+            aws s3api create-bucket \
+              --bucket "$BUCKET" \
+              --region "$REGION" \
+              --create-bucket-configuration LocationConstraint="$REGION"
+            # Allow public read for logos and photos
+            aws s3api put-public-access-block \
+              --bucket "$BUCKET" \
+              --public-access-block-configuration \
+              "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
+            aws s3api put-bucket-policy --bucket "$BUCKET" --policy '{
+              "Version":"2012-10-17",
+              "Statement":[{
+                "Sid":"PublicReadUploads",
+                "Effect":"Allow",
+                "Principal":"*",
+                "Action":"s3:GetObject",
+                "Resource":"arn:aws:s3:::'"$BUCKET"'/uploads/*"
+              }]
+            }'
+            echo "Bucket created and public-read policy applied"
+          else
+            echo "Bucket already exists"
+          fi
+
   # ── Job 2: Deploy Backend to EC2 ──────────────────────────────
   deploy-backend:
     name: Backend → EC2 Docker
@@ -67,6 +97,29 @@ jobs:
     needs: deploy-frontend   # run after frontend so both deploy in order
 
     steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Inject AWS credentials into backend .env on EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
+          script: |
+            # Add/update AWS creds in backend .env for S3 uploads
+            ENV_FILE="/home/ec2-user/app/backend/.env"
+            sed -i '/^AWS_ACCESS_KEY_ID=/d' "$ENV_FILE"
+            sed -i '/^AWS_SECRET_ACCESS_KEY=/d' "$ENV_FILE"
+            echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> "$ENV_FILE"
+            echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> "$ENV_FILE"
+            echo "✅ AWS credentials injected"
+
       - name: SSH deploy to EC2
         uses: appleboy/ssh-action@v1
         with:

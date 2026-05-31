@@ -59,6 +59,7 @@ import { SaralExportService } from './modules/export/saral-export.service';
 import { SmsService } from './modules/notification/sms.service';
 import { FeeReminderService } from './modules/notification/fee-reminder.service';
 import { AuditInterceptor } from './modules/audit/audit.interceptor';
+import { S3UploadService } from './common/services/s3-upload.service';
 
 // ── Controllers
 import { SansthaController } from './modules/sanstha/sanstha.controller';
@@ -186,6 +187,7 @@ const ALL_ENTITIES = [
     PermissionsGuard,
     ReportService,
     SaralExportService,
+    S3UploadService,
     SmsService,
     FeeReminderService,
     AuditInterceptor,
