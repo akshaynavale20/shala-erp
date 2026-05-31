@@ -22,16 +22,14 @@ services:
       - redis_data:/data
 
   backend:
+    image: ${BACKEND_IMAGE:-app-api}
     build:
       context: ./backend
       dockerfile: Dockerfile
     env_file: ./backend/.env
-    depends_on:
-      postgres:
-        condition: service_healthy
+    ports:
+      - "3000:3000"
     restart: unless-stopped
-    volumes:
-      - uploads_data:/app/uploads
 
   frontend:
     build:

@@ -4,11 +4,128 @@ on:
   push:
     branches: [main]
 
+# Cancel previous run if a new push comes in
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  # ── Job 1: Deploy Frontend to S3 + CloudFront ─────────────────
-  deploy-frontend:
-    name: Frontend → S3 + CloudFront
+  # ── Detect which parts of the codebase changed ─────────────────
+  changes:
+    name: Detect changes
     runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+              - 'docker-compose.prod.yml'
+
+  # ── Job 1: Build & push backend image to GHCR ──────────────────
+  build-backend:
+    name: Build Backend Image
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image: ${{ steps.meta.outputs.tags }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/backend
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          # Layer cache stored in GHCR — reuses npm install layer when deps unchanged
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/backend:cache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}/backend:cache,mode=max
+
+  # ── Job 2: Deploy backend image to EC2 ─────────────────────────
+  deploy-backend:
+    name: Deploy Backend → EC2
+    runs-on: ubuntu-latest
+    needs: [changes, build-backend]
+    if: needs.changes.outputs.backend == 'true'
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Deploy on EC2 — pull image & restart
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
+          script: |
+            SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+            IMAGE="ghcr.io/${{ github.repository }}/backend:${SHORT_SHA}"
+
+            # Inject/refresh AWS creds for S3 uploads
+            ENV_FILE="/home/ec2-user/app/backend/.env"
+            sed -i '/^AWS_ACCESS_KEY_ID=/d' "$ENV_FILE"
+            sed -i '/^AWS_SECRET_ACCESS_KEY=/d' "$ENV_FILE"
+            echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> "$ENV_FILE"
+            echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> "$ENV_FILE"
+
+            # Login to GHCR using the PAT stored on the server
+            echo "${{ secrets.GH_PAT }}" | \
+              docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            docker pull "$IMAGE"
+
+            cd /home/ec2-user/app
+            git pull origin main
+
+            # Use pre-built image — no docker build on EC2
+            BACKEND_IMAGE="$IMAGE" docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker image prune -f
+            echo "✅ Backend deployed: $IMAGE at $(date)"
+
+  # ── Job 3: Deploy frontend to S3 + CloudFront ──────────────────
+  deploy-frontend:
+    name: Deploy Frontend → S3 + CloudFront
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
 
     steps:
       - uses: actions/checkout@v4
@@ -35,42 +152,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Sync to S3
-        run: |
-          # Hashed assets (JS/CSS) — immutable, cache 1 year
-          aws s3 sync frontend/dist/assets/ s3://${{ secrets.S3_FRONTEND_BUCKET }}/assets/ \
-            --delete \
-            --region ap-south-1 \
-            --cache-control "public, max-age=31536000, immutable"
-          # index.html — always revalidate so new deploys are picked up immediately
-          aws s3 cp frontend/dist/index.html s3://${{ secrets.S3_FRONTEND_BUCKET }}/index.html \
-            --region ap-south-1 \
-            --cache-control "public, max-age=0, must-revalidate"
-          # Everything else (favicon, fonts, etc)
-          aws s3 sync frontend/dist/ s3://${{ secrets.S3_FRONTEND_BUCKET }} \
-            --delete \
-            --region ap-south-1 \
-            --exclude "assets/*" \
-            --exclude "index.html"
-
-      - name: Invalidate CloudFront
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/index.html" \
-            --region us-east-1
-
       - name: Ensure uploads S3 bucket exists
         run: |
           BUCKET="shala-erp-uploads-prod"
           REGION="ap-south-1"
           if ! aws s3api head-bucket --bucket "$BUCKET" --region "$REGION" 2>/dev/null; then
-            echo "Creating uploads bucket: $BUCKET"
+            echo "Creating uploads bucket..."
             aws s3api create-bucket \
               --bucket "$BUCKET" \
               --region "$REGION" \
               --create-bucket-configuration LocationConstraint="$REGION"
-            # Allow public read for logos and photos
             aws s3api put-public-access-block \
               --bucket "$BUCKET" \
               --public-access-block-configuration \
@@ -85,54 +176,29 @@ jobs:
                 "Resource":"arn:aws:s3:::'"$BUCKET"'/uploads/*"
               }]
             }'
-            echo "Bucket created and public-read policy applied"
+            echo "✅ Bucket created"
           else
             echo "Bucket already exists"
           fi
 
-  # ── Job 2: Deploy Backend to EC2 ──────────────────────────────
-  deploy-backend:
-    name: Backend → EC2 Docker
-    runs-on: ubuntu-latest
-    needs: deploy-frontend   # run after frontend so both deploy in order
+      - name: Sync to S3
+        run: |
+          # Hashed assets — cache 1 year
+          aws s3 sync frontend/dist/assets/ s3://${{ secrets.S3_FRONTEND_BUCKET }}/assets/ \
+            --delete --region ap-south-1 \
+            --cache-control "public, max-age=31536000, immutable"
+          # index.html — always revalidate
+          aws s3 cp frontend/dist/index.html s3://${{ secrets.S3_FRONTEND_BUCKET }}/index.html \
+            --region ap-south-1 \
+            --cache-control "public, max-age=0, must-revalidate"
+          # Everything else
+          aws s3 sync frontend/dist/ s3://${{ secrets.S3_FRONTEND_BUCKET }} \
+            --delete --region ap-south-1 \
+            --exclude "assets/*" --exclude "index.html"
 
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
-
-      - name: Inject AWS credentials into backend .env on EC2
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
-          script: |
-            # Add/update AWS creds in backend .env for S3 uploads
-            ENV_FILE="/home/ec2-user/app/backend/.env"
-            sed -i '/^AWS_ACCESS_KEY_ID=/d' "$ENV_FILE"
-            sed -i '/^AWS_SECRET_ACCESS_KEY=/d' "$ENV_FILE"
-            echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> "$ENV_FILE"
-            echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> "$ENV_FILE"
-            echo "✅ AWS credentials injected"
-
-      - name: SSH deploy to EC2
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd /home/ec2-user/app
-            git pull origin main
-            # Build with cache (not --no-cache) to avoid OOM on t3.micro 1GB RAM
-            # Only rebuild if backend source changed
-            docker compose -f docker-compose.prod.yml build
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
-            # Clean up dangling images to free disk space
-            docker image prune -f
-            echo "✅ Backend deployed at $(date)"
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/index.html" \
+            --region us-east-1
