@@ -76,6 +76,10 @@ jobs:
           script: |
             cd /home/ec2-user/app
             git pull origin main
-            docker compose -f docker-compose.prod.yml build --no-cache
-            docker compose -f docker-compose.prod.yml up -d
+            # Build with cache (not --no-cache) to avoid OOM on t3.micro 1GB RAM
+            # Only rebuild if backend source changed
+            docker compose -f docker-compose.prod.yml build
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            # Clean up dangling images to free disk space
+            docker image prune -f
             echo "✅ Backend deployed at $(date)"
