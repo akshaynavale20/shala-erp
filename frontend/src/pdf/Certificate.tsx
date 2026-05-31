@@ -498,8 +498,8 @@ export function CertificatePDF({ cert, student, sanstha, unit, userName, logoDat
             <Text style={s.railBadge}>पडताळणी</Text>
           </View>
 
-          {/* महाराष्ट्र राज्य badge (bottom) */}
-          <Text style={s.railBadge}>महाराष्ट्र{'\n'}राज्य</Text>
+          {/* School badge (bottom) */}
+          <Text style={s.railBadge}>शाळा{'\n'}प्रमाण</Text>
         </View>
 
         {/* ── Body ─────────────────────────────────────────────────────── */}

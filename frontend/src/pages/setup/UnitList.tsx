@@ -11,7 +11,6 @@ import { unitApi } from '../../api/client';
 import { useAuthStore } from '../../store/auth.store';
 
 const UNIT_TYPES = ['school', 'jr_college', 'pre_primary', 'degree_college', 'other'];
-const DIVISIONAL_BOARDS = ['pune', 'mumbai', 'nagpur', 'aurangabad', 'kolhapur', 'amravati', 'nashik', 'latur', 'konkan'];
 
 export default function UnitList() {
   const { t } = useTranslation();
@@ -154,13 +153,7 @@ export default function UnitList() {
           </Form.Item>
 
           <Form.Item name="divisionalBoard" label={t('setup.unit.divisionalBoard')}>
-            <Select allowClear>
-              {DIVISIONAL_BOARDS.map((v) => (
-                <Select.Option key={v} value={v}>
-                  {t(`setup.unit.divisionalBoards.${v}`)}
-                </Select.Option>
-              ))}
-            </Select>
+            <Input placeholder="e.g. CBSE / ICSE / State Board" />
           </Form.Item>
 
           <Form.Item name="addressMr" label={t('setup.unit.addressMr')}>

@@ -23,17 +23,6 @@ const UNIT_TYPES = [
   { value: 'other',          label: 'इतर' },
 ];
 
-const BOARDS = [
-  { value: 'pune',       label: 'पुणे विभागीय मंडळ' },
-  { value: 'mumbai',     label: 'मुंबई विभागीय मंडळ' },
-  { value: 'nagpur',     label: 'नागपूर विभागीय मंडळ' },
-  { value: 'aurangabad', label: 'छत्रपती संभाजीनगर विभागीय मंडळ' },
-  { value: 'kolhapur',   label: 'कोल्हापूर विभागीय मंडळ' },
-  { value: 'amravati',   label: 'अमरावती विभागीय मंडळ' },
-  { value: 'nashik',     label: 'नाशिक विभागीय मंडळ' },
-  { value: 'latur',      label: 'लातूर विभागीय मंडळ' },
-  { value: 'konkan',     label: 'कोकण विभागीय मंडळ' },
-];
 
 export default function OnboardingPage() {
   const navigate = useNavigate();
@@ -278,10 +267,8 @@ export default function OnboardingPage() {
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item name="divisionalBoard" label="विभागीय मंडळ">
-                      <Select size="large" placeholder="मंडळ निवडा" allowClear>
-                        {BOARDS.map(b => <Option key={b.value} value={b.value}>{b.label}</Option>)}
-                      </Select>
+                    <Form.Item name="divisionalBoard" label="शिक्षण मंडळ (Board)">
+                      <Input size="large" placeholder="e.g. CBSE / ICSE / State Board" />
                     </Form.Item>
                   </Col>
                   <Col span={12}>
@@ -334,7 +321,7 @@ export default function OnboardingPage() {
 
         <div style={{ textAlign: 'center', marginTop: 20 }}>
           <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>
-            विद्यासेतू ERP • महाराष्ट्र शाळा व्यवस्थापन प्रणाली
+            विद्यासेतू ERP • शाळा व्यवस्थापन प्रणाली
           </Text>
         </div>
       </div>

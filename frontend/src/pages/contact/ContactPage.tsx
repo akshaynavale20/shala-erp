@@ -66,7 +66,7 @@ export default function ContactPage() {
             </Text>
             <div style={{ marginTop: 10 }}>
               <Tag color={BRAND_GOLD} style={{ borderRadius: 20, fontSize: 12, padding: '2px 12px' }}>
-                Maharashtra School ERP
+                School ERP
               </Tag>
               <Tag
                 style={{
@@ -97,13 +97,13 @@ export default function ContactPage() {
             headStyle={{ borderBottom: `2px solid ${BRAND_GOLD}`, color: BRAND_BLUE }}
           >
             <Paragraph style={{ fontSize: 14, lineHeight: 1.8, color: '#333' }}>
-              <strong>VidyaSetu</strong> हे महाराष्ट्रातील शाळांसाठी तयार केलेले संपूर्ण ERP सॉफ्टवेअर आहे.
+              <strong>VidyaSetu</strong> हे शाळांसाठी तयार केलेले संपूर्ण ERP सॉफ्टवेअर आहे.
               विद्यार्थी नोंदणी, शुल्क संकलन, पगार व्यवस्थापन, उपस्थिती, प्रमाणपत्रे, अहवाल —
               सर्व एकाच ठिकाणी.
             </Paragraph>
             <Paragraph style={{ fontSize: 14, lineHeight: 1.8, color: '#333', marginBottom: 0 }}>
-              Marathi-first design, government-compliant formats, and branded PDFs — built specifically for
-              Maharashtra's aided & unaided schools.
+              Marathi-first design, government-compliant formats, and branded PDFs — built for
+              aided & unaided schools.
             </Paragraph>
 
             <Divider style={{ borderColor: BRAND_LIGHT }} />
@@ -183,7 +183,7 @@ export default function ContactPage() {
               <ContactRow
                 icon={<EnvironmentOutlined style={{ color: '#e74c3c', fontSize: 20 }} />}
                 label="Location"
-                value="Pune, Maharashtra, India"
+                value="India"
               />
 
             </Space>
@@ -204,7 +204,7 @@ export default function ContactPage() {
             <Space split={<Divider type="vertical" />} wrap style={{ justifyContent: 'center' }}>
               <Text style={{ color: BRAND_BLUE }}>
                 <HeartOutlined style={{ color: '#e74c3c', marginRight: 4 }} />
-                Made with love for Maharashtra's schools
+                Made with love for schools
               </Text>
               <Text style={{ color: '#555' }}>
                 © {new Date().getFullYear()} Akshay Navale · All Rights Reserved
