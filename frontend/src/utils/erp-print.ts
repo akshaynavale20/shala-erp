@@ -17,7 +17,6 @@ import dayjs from 'dayjs';
 import * as XLSX from 'xlsx';
 
 import { mediaUrl } from '../api/client';
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 /** Generate a short unique report serial: e.g. "RPT-1K3F2A" */
 function reportSerial(): string {
