@@ -9,7 +9,7 @@ import { useAuthStore } from '../../store/auth.store';
 import { useEffect, useState } from 'react';
 
 const { Text } = Typography;
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { mediaUrl } from '../../api/client';
 
 export default function SansthaForm() {
   const { t } = useTranslation();
@@ -80,7 +80,7 @@ export default function SansthaForm() {
       <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
         {logoUrl ? (
           <img
-            src={`${API_BASE}${logoUrl}`}
+            src={mediaUrl(logoUrl)!}
             alt="संस्था लोगो"
             style={{ width: 80, height: 80, objectFit: 'contain', border: '1px solid #eee', borderRadius: 8, padding: 4 }}
           />

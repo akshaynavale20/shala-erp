@@ -16,6 +16,7 @@
 import dayjs from 'dayjs';
 import * as XLSX from 'xlsx';
 
+import { mediaUrl } from '../api/client';
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 /** Generate a short unique report serial: e.g. "RPT-1K3F2A" */
@@ -321,7 +322,7 @@ export const BRAND_CSS = `
 export function brandHeader(sanstha?: any, unit?: any): string {
   if (!sanstha) return '';
 
-  const logoUrl = sanstha.logoUrl ? `${API_BASE}${sanstha.logoUrl}` : null;
+  const logoUrl = mediaUrl(sanstha.logoUrl);
   const initial = sanstha.nameMr?.charAt(0) || 'श';
 
   const logoHtml = logoUrl

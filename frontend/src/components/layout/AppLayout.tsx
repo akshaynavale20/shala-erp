@@ -21,7 +21,7 @@ const APP_VERSION = '1.0.0';
 const APP_NAME = 'VidyaSetu';
 const APP_NAME_MR = 'शाळा ERP';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { mediaUrl } from '../../api/client';
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
@@ -106,7 +106,7 @@ export default function AppLayout() {
   const selectedUnit = (units as any[]).find(u => u.id === selectedUnitId);
 
   // Sanstha logo — shown in sidebar and header
-  const logoUrl = (sanstha as any)?.logoUrl ? `${API_BASE}${(sanstha as any).logoUrl}` : null;
+  const logoUrl = mediaUrl((sanstha as any)?.logoUrl);
   const sansthaInitial = (sanstha as any)?.nameMr?.charAt(0) || 'श';
 
   return (

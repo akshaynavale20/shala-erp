@@ -6,12 +6,12 @@
  * hand react-pdf raw image bytes — no network call inside the PDF worker.
  */
 
-const API_BASE = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001';
+import { mediaUrl } from '../api/client';
 
-/** Convert a relative logo path (e.g. /uploads/logo-x.png) → base64 data URL */
+/** Convert a logo URL (relative or full S3 URL) → base64 data URL for PDF embedding */
 export async function loadLogoAsDataUrl(logoUrl: string | null | undefined): Promise<string | undefined> {
   if (!logoUrl) return undefined;
-  const fullUrl = logoUrl.startsWith('http') ? logoUrl : `${API_BASE}${logoUrl}`;
+  const fullUrl = mediaUrl(logoUrl)!;
   try {
     const res = await fetch(fullUrl);
     if (!res.ok) return undefined;

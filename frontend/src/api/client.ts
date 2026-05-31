@@ -1,7 +1,19 @@
 import axios from 'axios';
 
+export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+/** Resolve a logo/photo URL that may be:
+ *  - a full S3 URL: https://shala-erp-uploads-prod.s3...  → return as-is
+ *  - a legacy relative path: /uploads/logo-xxx.png        → prepend API_BASE
+ *  - null/undefined                                        → return null
+ */
+export function mediaUrl(url?: string | null): string | null {
+  if (!url) return null;
+  return url.startsWith('http') ? url : `${API_BASE}${url}`;
+}
+
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
+  baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
 });
 

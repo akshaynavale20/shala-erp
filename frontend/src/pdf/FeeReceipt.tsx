@@ -23,7 +23,7 @@ import { loadLogoAsDataUrl } from './logoLoader';
 // Mukta: tighter ascender/descender metrics than Noto — no line-overlap at compact sizes
 const MK = 'Mukta';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { mediaUrl } from '../api/client';
 
 // ── Design tokens (mirrors CSS :root vars) ──────────────────────────────────
 const C = {
@@ -357,7 +357,7 @@ interface CopyProps extends FeeReceiptProps {
 function CopySection({ copyTag, payment, student, demands, sanstha, unit, qrDataUrl, logoDataUrl }: CopyProps) {
   // Prefer pre-fetched base64 data URL; fall back to constructed URL only if not provided
   const logoUrl = logoDataUrl
-    ?? (sanstha?.logoUrl ? `${API_BASE}${sanstha.logoUrl}` : null);
+    ?? mediaUrl(sanstha?.logoUrl);
   const initial = sanstha?.nameMr?.charAt(0) || 'श';
   const modeLabel = MODE_LABELS[payment.paymentMode] || payment.paymentMode || '—';
 

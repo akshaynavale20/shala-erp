@@ -8,6 +8,7 @@
  */
 import { View, Text, Image, StyleSheet } from '@react-pdf/renderer';
 import { CERT, RPT, FONT, FONT_SERIF } from '../theme';
+import { mediaUrl } from '../../api/client';
 
 interface Props {
   sanstha?: any;
@@ -109,13 +110,10 @@ const s = StyleSheet.create({
   certDivDot:  { width: 3, height: 3, backgroundColor: CERT.gold },
 });
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
 export default function BrandHeader({ sanstha, unit, variant = 'report', logoDataUrl }: Props) {
   if (!sanstha) return null;
 
-  const logoUrl = logoDataUrl
-    ?? (sanstha.logoUrl ? `${API_BASE}${sanstha.logoUrl}` : null);
+  const logoUrl = logoDataUrl ?? mediaUrl(sanstha.logoUrl);
   const initial = sanstha.nameMr?.charAt(0) || 'श';
 
   const addrParts: string[] = [];

@@ -24,7 +24,7 @@ import AcademicYearSelect from '../../components/common/AcademicYearSelect';
 
 
 const { Text } = Typography;
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { mediaUrl } from '../../api/client';
 
 const GENDER_OPTS   = [{ value: 'male', label: 'पुरुष' }, { value: 'female', label: 'स्त्री' }, { value: 'other', label: 'इतर' }];
 const CATEGORY_OPTS = ['खुला','SC','ST','VJ','NT-A','NT-B','NT-C','NT-D','OBC','SBC','SEBC','EWS'].map(v => ({ value: v, label: v }));
@@ -308,7 +308,7 @@ export default function StudentsPage() {
       render: (_: any, rec: any) => (
         <Upload {...photoProps(rec.id)}>
           {rec.photoUrl
-            ? <img src={`${API_BASE}${rec.photoUrl}`} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', cursor: 'pointer' }} alt="" />
+            ? <img src={mediaUrl(rec.photoUrl)!} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', cursor: 'pointer' }} alt="" />
             : <Avatar size={36} icon={<UserOutlined />} style={{ background: '#1A5276', cursor: 'pointer' }} />}
         </Upload>
       ),

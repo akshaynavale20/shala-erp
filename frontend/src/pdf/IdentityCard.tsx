@@ -17,7 +17,7 @@ import { FONT } from './theme';
 import { registerFonts } from './fonts';
 import { loadLogoAsDataUrl } from './logoLoader';
 
-const API_BASE = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001';
+import { mediaUrl } from '../api/client';
 
 // ── Palette ───────────────────────────────────────────────────────────────────
 const BLUE      = '#1A3A5C';
@@ -355,7 +355,7 @@ function IDCard({
 
   const photoSrc = person.photoDataUrl
     ?? (person.photoUrl
-      ? (person.photoUrl.startsWith('http') ? person.photoUrl : `${API_BASE}${person.photoUrl}`)
+      ? mediaUrl(person.photoUrl)
       : undefined);
 
   // Field value helper — shows NA muted text if empty

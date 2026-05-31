@@ -21,7 +21,7 @@ import { useAuthStore } from '../../store/auth.store';
 import { useUnitAccess } from '../../hooks/useUnitAccess';
 
 const { Text } = Typography;
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { mediaUrl } from '../../api/client';
 
 const GENDER_OPTIONS = [
   { value: 'male', label: 'पुरुष' },
@@ -233,7 +233,7 @@ export default function StaffList() {
               <div style={{ position: 'relative', cursor: 'pointer' }}>
                 {rec.photoUrl ? (
                   <img
-                    src={`${API_BASE}${rec.photoUrl}`}
+                    src={mediaUrl(rec.photoUrl)!}
                     style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }}
                     alt=""
                   />
@@ -509,7 +509,7 @@ export default function StaffList() {
               <div style={{ position: 'relative', cursor: 'pointer' }}>
                 {editPhotoUrl ? (
                   <img
-                    src={`${API_BASE}${editPhotoUrl}`}
+                    src={mediaUrl(editPhotoUrl)!}
                     style={{ width: 72, height: 88, objectFit: 'cover', borderRadius: 4, border: '2px solid #1A3A5C' }}
                     alt="staff photo"
                   />
