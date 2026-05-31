@@ -8,6 +8,7 @@ import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { roleApi } from '../../api/client';
 import { useAuthStore } from '../../store/auth.store';
+import { MrInput } from '../../components/common/MrInput';
 
 const { Text } = Typography;
 const { Panel } = Collapse;
@@ -257,7 +258,7 @@ export default function RoleList() {
         <Form form={createForm} layout="vertical" onFinish={createMutation.mutate}>
           <Form.Item name="nameMr" label="भूमिकेचे नाव (मराठी)"
             rules={[{ required: true, message: 'मराठी नाव आवश्यक आहे' }]}>
-            <Input placeholder="उदा. शाळा लिपिक" />
+            <MrInput placeholder="uda. shala lipik" />
           </Form.Item>
           <Form.Item name="nameEn" label="भूमिकेचे नाव (English)"
             rules={[{ required: true, message: 'English name required' }]}>
@@ -299,7 +300,7 @@ export default function RoleList() {
           {!editRole?.isSystemRole && (
             <>
               <Form.Item name="nameMr" label="भूमिकेचे नाव (मराठी)" rules={[{ required: true }]}>
-                <Input />
+                <MrInput />
               </Form.Item>
               <Form.Item name="nameEn" label="भूमिकेचे नाव (English)" rules={[{ required: true }]}>
                 <Input />

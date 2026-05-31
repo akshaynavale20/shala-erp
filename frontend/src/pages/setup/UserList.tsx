@@ -10,6 +10,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { userApi, roleApi, unitApi } from '../../api/client';
 import { useAuthStore } from '../../store/auth.store';
+import { MrInput } from '../../components/common/MrInput';
 
 const { Text } = Typography;
 
@@ -223,7 +224,7 @@ export default function UserList() {
         onCancel={() => { setCreateOpen(false); createForm.resetFields(); }} footer={null} width={520}>
         <Form form={createForm} layout="vertical" onFinish={createMutation.mutate}>
           <Form.Item name="nameMr" label="नाव (मराठी)" rules={[{ required: true }]}>
-            <Input />
+            <MrInput />
           </Form.Item>
           <Form.Item name="email" label="ईमेल"
             rules={[{ required: true }, { type: 'email', message: 'चुकीचा ईमेल' }]}>
@@ -265,7 +266,7 @@ export default function UserList() {
         onCancel={() => setEditUser(null)} footer={null} width={480}>
         <Form form={editForm} layout="vertical" onFinish={updateMutation.mutate}>
           <Form.Item name="nameMr" label="नाव (मराठी)" rules={[{ required: true }]}>
-            <Input />
+            <MrInput />
           </Form.Item>
           <Form.Item name="phone" label="फोन">
             <Input />

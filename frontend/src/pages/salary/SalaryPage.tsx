@@ -370,7 +370,7 @@ export default function SalaryPage() {
       {/* Salary component modal */}
       <Modal title={t('salary.componentTitle')} open={compOpen} onCancel={() => setCompOpen(false)} footer={null}>
         <Form form={compForm} layout="vertical" onFinish={compMutation.mutate}>
-          <Form.Item name="nameMr" label={t('salary.fields.componentName')} rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item name="nameMr" label={t('salary.fields.componentName')} rules={[{ required: true }]}><MrInput /></Form.Item>
           <Form.Item name="isEarning" label={t('salary.fields.componentType')} initialValue={true}>
             <Select options={[{ value: true, label: t('salary.earnings') }, { value: false, label: t('salary.deductions') }]} />
           </Form.Item>
