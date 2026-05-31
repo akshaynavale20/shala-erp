@@ -1,0 +1,12 @@
+aws_region        = "ap-south-1"
+app_name          = "shala-erp"
+env               = "prod"
+
+ec2_instance_type = "t2.micro"
+ec2_key_pair_name = "your-key-pair-name"   # create in AWS Console → EC2 → Key Pairs
+
+db_name           = "shalaerp"
+db_username       = "shalaadmin"
+db_password       = "ChangeMe@1234!"       # strong password
+
+jwt_secret        = "change-this-to-a-random-64-char-string"
