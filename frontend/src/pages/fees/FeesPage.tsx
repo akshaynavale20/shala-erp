@@ -94,17 +94,17 @@ function DefaultersTab({ me, units, academicYears }: any) {
 
   return (
     <div>
-      <Row gutter={12} style={{ marginBottom: 12 }}>
-        <Col span={6}>
+      <Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
+        <Col xs={24} sm={12} md={6}>
           <Select placeholder={t('fees.defaulters.selectSchool')} style={{ width: '100%' }} onChange={setFilterUnit}
             options={(units as any[]).map((u: any) => ({ value: u.id, label: u.nameMr }))} />
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={12} md={6}>
           <Select placeholder={t('fees.defaulters.selectYear')} style={{ width: '100%' }} onChange={setFilterYear}
             options={(academicYears as any[]).map((y: any) => ({ value: y.id, label: y.labelMr || y.labelEn }))} />
         </Col>
         {(defaulters as any[]).length > 0 && (
-          <Col span={12}>
+          <Col xs={24} md={12}>
             <Alert
               type="warning"
               message={t('fees.defaulters.summary', { count: (defaulters as any[]).length, total: totalOutstanding.toLocaleString('mr-IN') })}

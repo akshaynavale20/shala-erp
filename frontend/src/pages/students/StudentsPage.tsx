@@ -525,6 +525,7 @@ export default function StudentsPage() {
         rowKey="id"
         loading={isLoading}
         size="small"
+        scroll={{ x: 700 }}
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys,

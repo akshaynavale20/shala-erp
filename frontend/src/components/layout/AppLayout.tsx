@@ -52,6 +52,7 @@ export default function AppLayout() {
   const { user, logout, hasPermission, isSansthaLevel } = useAuthStore();
   const { selectedUnitId, setSelectedUnitId } = useAppStore();
   const [siderCollapsed, setSiderCollapsed] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 992);
 
   const { data: sanstha } = useQuery({
     queryKey: ['sanstha', user?.sansthaId],
@@ -117,7 +118,7 @@ export default function AppLayout() {
         breakpoint="lg"
         collapsedWidth={0}
         collapsed={siderCollapsed}
-        onBreakpoint={(broken) => setSiderCollapsed(broken)}
+        onBreakpoint={(broken) => { setSiderCollapsed(broken); setIsMobile(broken); }}
         onCollapse={(collapsed) => setSiderCollapsed(collapsed)}
         style={{
           background: 'linear-gradient(180deg, #1A3A5C 0%, #0F2640 100%)',
@@ -223,11 +224,16 @@ export default function AppLayout() {
         </div>
       </Sider>
 
+      {/* ── Mobile overlay — closes sidebar when tapping outside ────────────── */}
+      {isMobile && !siderCollapsed && (
+        <div className="mobile-sidebar-overlay" onClick={() => setSiderCollapsed(true)} />
+      )}
+
       {/* ── Main area ────────────────────────────────────────────────────────── */}
-      <Layout style={{ marginLeft: 240 }}>
+      <Layout style={{ marginLeft: isMobile ? 0 : 230, transition: 'margin-left 0.2s' }}>
         <Header style={{
           background: '#fff',
-          padding: '0 20px',
+          padding: isMobile ? '0 10px' : '0 20px',
           borderBottom: '1px solid #E8EFF7',
           display: 'flex',
           alignItems: 'center',
@@ -244,7 +250,6 @@ export default function AppLayout() {
               type="text"
               icon={siderCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => setSiderCollapsed(!siderCollapsed)}
-              style={{ display: 'none' }}
               className="mobile-menu-btn"
             />
             {logoUrl ? (
@@ -268,7 +273,7 @@ export default function AppLayout() {
                 {myUnitName || '...'}
               </Tag>
             )}
-            {selectedUnit && sansthaLevel && (
+            {selectedUnit && sansthaLevel && !isMobile && (
               <Text type="secondary" style={{ fontSize: 11 }}>
                 {selectedUnit.nameMr}
               </Text>
@@ -289,14 +294,14 @@ export default function AppLayout() {
               >
                 {user?.nameMr?.charAt(0) || 'U'}
               </Avatar>
-              <div style={{ lineHeight: 1.3 }}>
+              {!isMobile && <div style={{ lineHeight: 1.3 }}>
                 <Text style={{ fontSize: 12, fontWeight: 600, display: 'block', color: '#1A3A5C' }}>
                   {user?.nameMr}
                 </Text>
                 <Text style={{ fontSize: 10, color: '#999', display: 'block' }}>
                   {user?.email || 'वापरकर्ता'}
                 </Text>
-              </div>
+              </div>}
             </Space>
           </Dropdown>
           </div>

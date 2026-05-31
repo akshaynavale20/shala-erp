@@ -153,23 +153,23 @@ function DailyAttendance() {
       )}
 
       {selectedUnit && total > 0 && (
-        <Row gutter={16} style={{ marginBottom: 16 }}>
-          <Col span={6}>
+        <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
+          <Col xs={12} sm={6}>
             <Card size="small" style={{ borderTop: '3px solid #1A3A5C' }}>
               <Statistic title="एकूण विद्यार्थी" value={total} />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={12} sm={6}>
             <Card size="small" style={{ borderTop: '3px solid #27AE60' }}>
               <Statistic title="उपस्थित" value={present} valueStyle={{ color: '#27AE60' }} />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={12} sm={6}>
             <Card size="small" style={{ borderTop: '3px solid #E74C3C' }}>
               <Statistic title="अनुपस्थित" value={absent} valueStyle={{ color: '#E74C3C' }} />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={12} sm={6}>
             <Card size="small" style={{ borderTop: '3px solid #E67E22' }}>
               <Statistic title="उपस्थिती %" value={total > 0 ? Math.round((present / total) * 100) : 0} suffix="%"
                 valueStyle={{ color: present / total >= 0.75 ? '#27AE60' : '#E74C3C' }} />
@@ -180,6 +180,7 @@ function DailyAttendance() {
 
       <Table dataSource={activeStudents} columns={columns} rowKey="id"
         loading={studentsLoading} pagination={false} size="small"
+        scroll={{ x: 580 }}
         locale={{ emptyText: selectedUnit ? 'या शाळेत विद्यार्थी नाहीत' : 'शाळा निवडा' }} />
 
       {selectedUnit && total > 0 && (

@@ -466,6 +466,7 @@ export default function StaffList() {
         rowKey="id"
         loading={isLoading}
         pagination={{ pageSize: 20 }}
+        scroll={{ x: 700 }}
         rowSelection={{
           selectedRowKeys,
           onChange: setSelectedRowKeys,

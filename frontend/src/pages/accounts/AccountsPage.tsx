@@ -493,6 +493,7 @@ function TransactionsTable({
   return (
     <Table
       dataSource={data} columns={columns} rowKey="id" loading={loading} size="small"
+      scroll={{ x: 700 }}
       pagination={{ pageSize: 15, showTotal: (total) => `${t('app.total')}: ${total}` }}
       summary={(rows) => {
         const total = rows.reduce((s, r) => s + Number(r.amount || 0), 0);
@@ -616,20 +617,20 @@ function CashBookTab({ allData, sanstha, unit, userName }: { allData: any[]; san
           </Button>
         </Space>
       </Card>
-      <Row gutter={12} style={{ marginBottom: 12 }}>
-        <Col span={6}><Card size="small" style={{ background: '#EEF4F9', textAlign: 'center' }}>
+      <Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
+        <Col xs={12} sm={6}><Card size="small" style={{ background: '#EEF4F9', textAlign: 'center' }}>
           <Text type="secondary">{t('accounts.cashBook.openingBalance')}</Text>
           <div style={{ fontWeight: 700, color: '#1A3A5C' }}>₹{openingBalance.toLocaleString('en-IN')}</div>
         </Card></Col>
-        <Col span={6}><Card size="small" style={{ background: '#e8f5e9', textAlign: 'center' }}>
+        <Col xs={12} sm={6}><Card size="small" style={{ background: '#e8f5e9', textAlign: 'center' }}>
           <Text type="secondary">{t('accounts.totalIncome')}</Text>
           <div style={{ fontWeight: 700, color: '#2e7d32' }}>₹{totalIncome.toLocaleString('en-IN')}</div>
         </Card></Col>
-        <Col span={6}><Card size="small" style={{ background: '#ffebee', textAlign: 'center' }}>
+        <Col xs={12} sm={6}><Card size="small" style={{ background: '#ffebee', textAlign: 'center' }}>
           <Text type="secondary">{t('accounts.totalExpense')}</Text>
           <div style={{ fontWeight: 700, color: '#c62828' }}>₹{totalExpense.toLocaleString('en-IN')}</div>
         </Card></Col>
-        <Col span={6}><Card size="small" style={{ background: closingBal >= 0 ? '#e3f2fd' : '#fff3e0', textAlign: 'center' }}>
+        <Col xs={12} sm={6}><Card size="small" style={{ background: closingBal >= 0 ? '#e3f2fd' : '#fff3e0', textAlign: 'center' }}>
           <Text type="secondary">{t('accounts.cashBook.closingBalance')}</Text>
           <div style={{ fontWeight: 700, color: closingBal >= 0 ? '#1565c0' : '#e65100' }}>₹{closingBal.toLocaleString('en-IN')}</div>
         </Card></Col>
@@ -706,16 +707,16 @@ function ReportsTab({ allData, sanstha, unit, userName }: { allData: any[]; sans
   return (
     <div>
       {/* Summary stats */}
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={8}><Card size="small" style={{ background: '#e8f5e9', borderLeft: '4px solid #2e7d32' }}>
+      <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
+        <Col xs={24} sm={8}><Card size="small" style={{ background: '#e8f5e9', borderLeft: '4px solid #2e7d32' }}>
           <div style={{ fontSize: 12, color: '#555' }}>{t('accounts.totalIncome')}</div>
           <div style={{ fontSize: 20, fontWeight: 700, color: '#2e7d32' }}>₹{totalIncome.toLocaleString('en-IN')}</div>
         </Card></Col>
-        <Col span={8}><Card size="small" style={{ background: '#ffebee', borderLeft: '4px solid #c62828' }}>
+        <Col xs={24} sm={8}><Card size="small" style={{ background: '#ffebee', borderLeft: '4px solid #c62828' }}>
           <div style={{ fontSize: 12, color: '#555' }}>{t('accounts.totalExpense')}</div>
           <div style={{ fontSize: 20, fontWeight: 700, color: '#c62828' }}>₹{totalExpense.toLocaleString('en-IN')}</div>
         </Card></Col>
-        <Col span={8}><Card size="small" style={{ background: '#e3f2fd', borderLeft: '4px solid #1565c0' }}>
+        <Col xs={24} sm={8}><Card size="small" style={{ background: '#e3f2fd', borderLeft: '4px solid #1565c0' }}>
           <div style={{ fontSize: 12, color: '#555' }}>{t('accounts.balance')}</div>
           <div style={{ fontSize: 20, fontWeight: 700, color: '#1565c0' }}>₹{(totalIncome - totalExpense).toLocaleString('en-IN')}</div>
         </Card></Col>

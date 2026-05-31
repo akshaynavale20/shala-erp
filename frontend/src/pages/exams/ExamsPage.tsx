@@ -198,7 +198,7 @@ export default function ExamsPage() {
 
           {/* Exam list */}
           {activeSection !== 'marks' && (
-            <Table dataSource={exams} columns={columns} rowKey="id" loading={isLoading} />
+            <Table dataSource={exams} columns={columns} rowKey="id" loading={isLoading} scroll={{ x: 600 }} />
           )}
 
           {/* Marks entry */}
@@ -226,7 +226,7 @@ export default function ExamsPage() {
                   />
                 </>
               ) : (
-                <Table dataSource={exams} columns={columns} rowKey="id" loading={isLoading} />
+                <Table dataSource={exams} columns={columns} rowKey="id" loading={isLoading} scroll={{ x: 600 }} />
               )}
             </div>
           )}

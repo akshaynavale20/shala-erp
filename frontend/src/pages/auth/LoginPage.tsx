@@ -46,7 +46,7 @@ export default function LoginPage() {
       background: 'linear-gradient(135deg, #1A3A5C 0%, #2E86C1 100%)',
       fontFamily: 'Mukta, sans-serif',
     }}>
-      <div style={{ width: 420 }}>
+      <div style={{ width: '100%', maxWidth: 420, padding: '0 16px' }}>
         {/* Brand header above card */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
           <div style={{

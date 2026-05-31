@@ -112,3 +112,105 @@ body {
     display: inline-flex !important;
   }
 }
+
+/* ── Mobile overlay (behind open sidebar on small screens) ───────────── */
+.mobile-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 9;
+  cursor: pointer;
+}
+@media (max-width: 992px) {
+  .mobile-sidebar-overlay {
+    display: block;
+  }
+}
+
+/* ── Tables: always allow horizontal scroll ──────────────────────────── */
+.ant-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Mobile breakpoint (≤768px) ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Clamp modal width so it never overflows the viewport */
+  .ant-modal {
+    max-width: calc(100vw - 16px) !important;
+    margin: 8px auto !important;
+  }
+
+  /* Stack 12-wide form columns inside modals */
+  .ant-modal .ant-form .ant-col.ant-col-12,
+  .ant-modal .ant-form .ant-col.ant-col-8 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Keep small utility cols (delete btn, etc.) in place */
+  .ant-modal .ant-form .ant-col.ant-col-2,
+  .ant-modal .ant-form .ant-col.ant-col-3 {
+    flex: 0 0 auto !important;
+    max-width: none !important;
+  }
+
+  /* Page-level container padding */
+  .page-container {
+    padding: 12px !important;
+  }
+
+  /* Tabs: horizontal scroll instead of wrapping */
+  .ant-tabs-nav-wrap { overflow: visible !important; }
+  .ant-tabs-nav-list { flex-wrap: nowrap; overflow-x: auto; }
+
+  /* Touch-friendly tap targets */
+  .ant-btn { min-height: 38px; }
+
+  /* Progress inside table cells */
+  .ant-progress { max-width: 80px; }
+
+  /* Header unit selector smaller */
+  .ant-select.ant-select-sm { min-width: 120px !important; }
+}
+
+/* ── Extra-small (≤576px) ────────────────────────────────────────────── */
+@media (max-width: 576px) {
+  /* Tighter table cells */
+  .ant-table-tbody > tr > td {
+    padding-top:    6px !important;
+    padding-bottom: 6px !important;
+    padding-left:   8px !important;
+    padding-right:  8px !important;
+  }
+  .ant-table-thead > tr > th {
+    padding: 8px !important;
+    font-size: 12px !important;
+  }
+  .ant-table-cell { font-size: 13px !important; }
+
+  /* Stack ALL 12-span cols in forms (page-level, not just modal) */
+  .ant-form .ant-col.ant-col-12 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  /* Keep small cols (delete/action btns) */
+  .ant-form .ant-col.ant-col-2,
+  .ant-form .ant-col.ant-col-3 {
+    flex: 0 0 auto !important;
+    max-width: none !important;
+  }
+}
+
+/* ── iOS: prevent input zoom (font-size must be ≥ 16px on focus) ──────── */
+@media (max-width: 768px) {
+  .ant-input,
+  .ant-input-affix-wrapper .ant-input,
+  .ant-select-selection-search-input,
+  .ant-picker-input > input,
+  .ant-input-number-input,
+  .ant-input-password input {
+    font-size: 16px !important;
+  }
+}

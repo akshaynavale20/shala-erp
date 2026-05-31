@@ -248,6 +248,7 @@ export default function SalaryPage() {
                   <Table
                     dataSource={filterUnit ? (slips as any[]).filter((s: any) => s.unitId === filterUnit) : slips as any[]}
                     columns={slipColumns} rowKey="id" loading={isLoading}
+                    scroll={{ x: 700 }}
                   />
                 </div>
               ),
