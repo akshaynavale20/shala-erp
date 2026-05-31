@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Unit } from './unit.entity';
 import { IsString, IsOptional, IsBoolean, IsEnum, IsNumber } from 'class-validator';
-import { UnitType, DivisionalBoard } from './unit.entity';
+import { UnitType } from './unit.entity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUnitDto {
@@ -16,7 +16,7 @@ export class CreateUnitDto {
   @IsOptional() @IsString() phone?: string;
   @IsOptional() @IsString() email?: string;
   @IsOptional() @IsBoolean() aided?: boolean;
-  @IsOptional() @IsEnum(DivisionalBoard) divisionalBoard?: DivisionalBoard;
+  @IsOptional() @IsString() divisionalBoard?: string;
   @IsOptional() @IsNumber() establishedYear?: number;
 }
 

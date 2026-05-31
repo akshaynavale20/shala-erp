@@ -10,17 +10,6 @@ export enum UnitType {
   OTHER = 'other',
 }
 
-export enum DivisionalBoard {
-  PUNE = 'pune',
-  MUMBAI = 'mumbai',
-  NAGPUR = 'nagpur',
-  AURANGABAD = 'aurangabad',
-  KOLHAPUR = 'kolhapur',
-  AMRAVATI = 'amravati',
-  NASHIK = 'nashik',
-  LATUR = 'latur',
-  KONKAN = 'konkan',
-}
 
 @Entity('unit')
 export class Unit extends SansthaBaseEntity {
@@ -57,13 +46,8 @@ export class Unit extends SansthaBaseEntity {
   @Column({ default: false })
   aided: boolean;
 
-  @Column({
-    name: 'divisional_board',
-    type: 'enum',
-    enum: DivisionalBoard,
-    nullable: true,
-  })
-  divisionalBoard: DivisionalBoard;
+  @Column({ name: 'divisional_board', nullable: true })
+  divisionalBoard: string;
 
   @Column({ name: 'established_year', nullable: true })
   establishedYear: number;
