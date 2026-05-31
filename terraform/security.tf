@@ -41,7 +41,7 @@ resource "aws_security_group" "ec2" {
 # ── RDS Security Group ────────────────────────────────────────
 resource "aws_security_group" "rds" {
   name        = "${var.app_name}-rds-sg"
-  description = "RDS PostgreSQL — only EC2 can connect"
+  description = "RDS PostgreSQL - only EC2 can connect"
   vpc_id      = aws_vpc.main.id
 
   ingress {

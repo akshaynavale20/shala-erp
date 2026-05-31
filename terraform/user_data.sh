@@ -22,15 +22,15 @@ cd app
 
 # ── Write .env ─────────────────────────────────────────────────
 cat > backend/.env << 'ENVEOF'
-NODE_ENV=production
+NODE_ENV=staging
 PORT=3000
 
 DB_HOST=${db_host}
 DB_PORT=${db_port}
-DB_NAME=${db_name}
-DB_USER=${db_username}
-DB_PASS=${db_password}
-DB_SYNCHRONIZE=false
+DB_DATABASE=${db_name}
+DB_USERNAME=${db_username}
+DB_PASSWORD=${db_password}
+DB_SYNCHRONIZE=true
 
 JWT_SECRET=${jwt_secret}
 JWT_EXPIRES_IN=7d
@@ -39,6 +39,7 @@ AWS_REGION=${aws_region}
 AWS_S3_BUCKET=${s3_bucket}
 UPLOAD_DEST=s3
 
+FRONTEND_URL=https://d2xx97edfcvp2e.cloudfront.net
 CORS_ORIGINS=*
 ENVEOF
 

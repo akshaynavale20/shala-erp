@@ -24,7 +24,7 @@ resource "aws_instance" "api" {
 
   root_block_device {
     volume_type = "gp2"
-    volume_size = 20  # free tier allows 30GB
+    volume_size = 30  # free tier allows 30GB
   }
 
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {

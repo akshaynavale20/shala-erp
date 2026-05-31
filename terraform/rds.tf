@@ -17,7 +17,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible       = false
   skip_final_snapshot       = true
   deletion_protection       = false
-  backup_retention_period   = 7       # 7 days backup free
+  backup_retention_period   = 0       # free tier: 0 required
   auto_minor_version_upgrade = true
   storage_encrypted         = false   # encryption costs extra
 
